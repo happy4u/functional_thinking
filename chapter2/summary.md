@@ -163,7 +163,7 @@ return names
 ---
 # 2.2.2 조금 더 함수적인 자연수 분류기
 * 공유상태를 최소화 하기위해 멤버 변수를 없애고 필요한 값들을 매개변수로 넘김
-* [예제 2-10 자바를 사용한 자연수 분류기](https://github.com/happy4u/functional_thinking/blob/master/chapter2/2.2.2_ex_2-11.java)
+* [예제 2-11 약간 더 함수형인 자연수 분류기](https://github.com/happy4u/functional_thinking/blob/master/chapter2/2.2.2_ex_2-11.java)
 	* (1) 모든 메서드는 number를 매개변수로 받아야 한다. 그 값을 유지할 내부 상태는 없다.
 	* (2) 모든 메서드는 순수함수이기 때문에 public static이다. 그렇기 때문에 자연수 분류 문제라는 범위 밖에서도 유용하다
 	* (3) 일반적이고 합리적인 변수의 사용으로 함수 수준에서의 재사용이 쉬워졌다.
