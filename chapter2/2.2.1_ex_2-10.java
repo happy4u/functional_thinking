@@ -4,8 +4,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class ImpNumberClassifierSimple {
-    private int _number;
-    private Map<Integer, Integer> _cache;
+    private int _number;                      // (1)
+    private Map<Integer, Integer> _cache;     // (2)
 
     public ImpNumberClassifierSimple(int targetNumber) {
         _number = targetNumber;
@@ -25,7 +25,7 @@ public class ImpNumberClassifierSimple {
         return factors;
     }
 
-    public int aliquotSum() {
+    public int aliquotSum() {                 // (3)
         if (_cache.get(_number) == null) {
             intsum = 0;
             for (int i : getFactors())
