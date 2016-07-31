@@ -4,11 +4,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class NumberClassifier {
-    public static boolean isFactor(final int candidate, final int number) { // (1)
+    public static boolean isFactor(final int candidate, final int number) {   // (1)
         return number % candidate == 0;
     }
 
-    public static Set<Integer> factors(final int number) {                  // (2)
+    public static Set<Integer> factors(final int number) {                    // (2)
         Set<Integer> factors = new HashSet<>();
         factors.add(1);
         factors.add(number);
@@ -20,14 +20,14 @@ public class NumberClassifier {
     public static int aliquotSum(final Collection<Integer> factors) {
         int sum = 0;
 
-        int targetNumber = Collections.max(factors);                        // (3)
+        int targetNumber = Collections.max(factors);                          // (3)
         for (int n : factors) {
             sum += n;
         }
         return sum - targetNumber;
     }
 
-    public static boolean isPerfect(final int number) {                     // (4)
+    public static boolean isPerfect(final int number) {                       // (4)
         return aliquotSum(factors(number)) == number;
     }
 
