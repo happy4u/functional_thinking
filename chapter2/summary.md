@@ -173,4 +173,21 @@ return names
 
 ---
 # 2.2.3 자바 8을 사용한 자연수 분류기
+* 자바 8에 더해진 최고의 기능은 람다블록과 고계함수다.
+* [예제 2-12 자바 8 자연수 분류기](https://github.com/happy4u/functional_thinking/blob/master/chapter2/2.2.3_ex_2-12.java)
+	* factorOf() 메서드는 스트림을 종료한 뒤 값으로 만드는 것과 같은 다른 작업과 연계할 수 있도록 IntStream을 리턴한다.
+	* aliquotSum() 메서드는 목록에 있는 자연수의 합에서 자신의 값을 제외하기만 하면 된다. 이 메서드는 스트림을 종료하고 값을 생성해준다.
+
+
+---
+# 2.2.4 함수형 자바를 사용한 자연수 분류기
+* Functional Java는 자바 1.5 이후 버전에 무리 없이 함수형 표현을 추가하려는 목적으로 만들어진 오픈소스 프레임워크다.
+* 1.5 시절의 자바에는 고계함수가 없었기 때문에 함수형 자바는 제네릭이나 익명 내부 클래스를 흉내 내어 사용했다.
+* [예제 2-13 함수형 자바를 사용한 자연수 분류기](https://github.com/happy4u/functional_thinking/blob/master/chapter2/2.2.4_ex_2-13.java)
+	* [예제 2-12](https://github.com/happy4u/functional_thinking/blob/master/chapter2/2.2.3_ex_2-12.java)와 [예제 2-13](https://github.com/happy4u/functional_thinking/blob/master/chapter2/2.2.4_ex_2-13.java)의 주요 차이점은 두 메서드에서 볼 수 있다. aliquotSum()과 factorsOf() 메서드다.
+	* aliquotSum() 메서드는 함수형 자바에서 제공하는 List 클래스의 foldLeft() 메서드를 사용한다.
+	* factorsOf() : 자연수 1부터 대상의 수까지 f() 메서드의 코드를 사용해서 목록을 필터한다.
+
+---
+# 2.3 공동된 빌딩블록
 
