@@ -191,3 +191,60 @@ return names
 ---
 # 2.3 공동된 빌딩블록
 
+---
+# 2.3.1 필터
+* 목록(Lists)에서 할 수 있는 흔한 작업은 필터하는 것이다.
+* 필터 작업을 할 때에는 필터 조건에 따라서 원래 목록보다 작은 목록(또는 컬렉션)을 생성한다.
+* 예제 2-14 자바 8에서의 필터 작업
+```
+public static IntStream factorsOf(int number) {
+        return range(1, number + 1)
+               .filter(potential -> number % potential == 0);
+}
+```
+---
+# 2.3.1 필터 - cont.
+* 람다 블록이 있는 언어에서는 더 간결하게 표현할 수 있다.
+* 예제 2-15 그루비에서의 필터 작업(그루비에서는 필터를 findAll()이라고 부른다)
+```
+static def factors(number) {
+        (1..number).findAll {number % it == 0}
+}
+```
+
+---
+# 2.3.2 맵
+* 맵 연산은 컬렉션의 각 요소에 같은 함수를 적용하여 새로운 컬렉션으로 만든다.
+* map()이나 그와 관련된 변형 연산들을 살펴보기 위해서 자연수 분류기의 최적화된 버젼을 만들었다.
+* [예제 2-16 최적화된 자연수 분류기](https://github.com/happy4u/functional_thinking/blob/master/chapter2/2.3.2_ex_2-16.java)
+	* [예제 2-10 자바를 사용한 자연수 분류기](https://github.com/happy4u/functional_thinking/blob/master/chapter2/2.2.1_ex_2-10.java)와 비교하면 getFactors()가 최적화 됨.
+	1. 여기저기에 number를 매개변수로 입력하는 것을 방지하기 위한 내부 상태
+	2. sum을 더 효율적으로 조회하기 위한 캐시
+	3. 약수는 항상 짝으로 찾을 수 있는 점을 이용한 최적화
+	4. 캐시된 합이 있는 경우 리턴하는 메서드
+
+---
+# 2.3.2 맵 - cont.
+* 그루비는 물론 함수형 변형 함수들을 포함하고 있다. 예제 2-17에서 보듯이 collect()가 map()의 그루비 버젼이다.
+* 예제 2-17 그루비로 최적화된 factors
+```
+static def factors(number) {
+        def factors = (1..round(sqrt(number)+1)).findAll({number % it == 0}) 
+        (factors + factors.collect {number / it}).unique()
+}
+```
+
+---
+# 2.3.2 맵 - cont.
+* 함수형 프로그래밍이 얼마나 코드를 바꿀 수 있는지를 보기 위해 클로저로 짠 예제 2-18을 살펴보자
+* [예제 2-18 모든 연산을 몇 번의 할당으로 캡슐화한 클로저의 (classify) 함수](https://github.com/happy4u/functional_thinking/blob/master/chapter2/2.3.2_ex_2-18.clj)
+	1. 메서드는 곧 할당이 된다.
+	2. 필터된 범위에 약수를 할당한다
+	3. 리듀스된 약수에 sum을 할당한다.
+	4. 진약수의 합을 계산한다
+	5. 해당하는 분류 키워드(열거)를 리턴한다.
+
+---
+# 2.3.3 폴드/리듀스
+* 셋째로 자주 사용하는 함수는 많이 사용하는 언어들 사이에서도 이름이 다양하고 약간씩 의미도 다르다. foldleft나 reduce는 캐터모피즘(카테고리 이론의 개념으로 목록을 접어서 다른 형태로 만드는 연산을 총칭한다.)이라는 목록 조작 개념의 특별한 변형이다.
+* ![폴드 연산(fold operation)](https://github.com/happy4u/functional_thinking/blob/master/chapter2/fold_operation.gif)
