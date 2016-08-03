@@ -17,6 +17,7 @@
 
 ---
 ### 2.1.1 명령형 처리 (2/2)
+* 예제 2-1 전형적인 회사 프로세스(자바)
 ```
 Example 2-1. Typical company process (in Java)
 package com.nealford.functionalthinking.trans;
@@ -39,7 +40,7 @@ public String cleanNames(List<String> listOfNames) {
 ```
 ---
 ### 2.1.2 함수형 처리
-* psudeocode
+* 예제 2-2 '회사 프로세스'에 대한 의사코드
 ```
 listOfEmps
     -> filter(x.length > 1)
@@ -49,7 +50,7 @@ listOfEmps
 
 ---
 ### 2.1.2 함수형 처리 - cont.
-* 스칼라 예
+* 예제 2-3 스칼라의 함수형 처리
 ```
 val employees = List("neal", "s", "stu", "j", "rich", "bob", "aiden", "j", "ethan", "liam", "mason", "noah", "lucas", "jacob", "jayden", "jack")
 
@@ -61,7 +62,7 @@ val result = employees
 
 ---
 ### 2.1.2 함수형 처리 - cont.
-* java 8
+* 예제 2-4 회사 프로세스의 자바 8 버젼
 ```
 public String cleanNames(List<String> names) { 
 if (names == null) return "";
@@ -78,7 +79,7 @@ private String capitalize(String e) {
 
 ---
 ### 2.1.2 함수형 처리 - cont.
-* 그루비
+* 예제 2-5 그루비로 처리하기
 ```
 public static String cleanUpNames(listOfNames) { listOfNames
         .findAll { it.length() > 1 }
@@ -89,7 +90,7 @@ public static String cleanUpNames(listOfNames) { listOfNames
 
 ---
 ### 2.1.2 함수형 처리 - cont.
-* 클로저
+* 예제 2-6 클로저로 처리하기
 ```
 (ns trans.core
 	(:require [clojure.string :as s]))
@@ -113,7 +114,7 @@ public static String cleanUpNames(listOfNames) { listOfNames
 ---
 ### 2.1.2 함수형 처리 - cont.
 * java의 명령형 코드를 병렬처리화 한다고 생각해보자 --;;
-* 다음은 scala의 병렬처리 코드
+* 예제 2-8 스칼라에서의 병렬처리
 	* 스트림에 par만 붙이면 된다.
 ```
 val parallelResult = employees 
@@ -125,7 +126,7 @@ val parallelResult = employees
 
 ---
 ### 2.1.2 함수형 처리 - cont.
-* java 8의 병렬처리도 마찬가지
+* 예제 2-9 자바 8에서의 분산처리
 	* parallelStream만 추가
 ```
 public String cleanNamesP(List<String> names) { if (names == null) return "";
