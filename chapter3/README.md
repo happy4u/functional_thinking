@@ -239,3 +239,134 @@ assert(List(2, 4, 6) == (List(1, 3, 5, "seven") collect { case i: Int ? i + 1 })
 * 부분함수는 수치형 자료형에만 국한된 것이 아니다
 * Any를 포함한 모든 자료형에 사용할 수 있다.
 * [예제 3-16 스칼라의 증가 함수](https://github.com/happy4u/functional_thinking/blob/master/chapter3/3.3_ex_3-16.scala)
+	* 어떤 입력이든 받지만 그 일부분에 대해서만 반ㅇㅇ하는 부분함수를 정의
+	* 하지만 이 부분함수의 isDefinedAt()을 부를 수는 있다.
+		* PartialFunction 트레이트를 구현하면 isDefinedAt()이 묵시적으로 정의되기 때문
+* 스칼라에서 부분함수와 부분 적용 함수는 이름은 비슷하지만 서로 다른 기능을 제공
+	* 부분함수를 부분 적용할 수 있다.
+
+---
+### 3.3.1 정의와 차이점 - cont.
+#### 보편적인 용례
+* 커링과 부분 적용은 실제로 프로그래밍에서 큰 자리를 차지한다.
+
+##### | 함수 팩토리 |
+* 커링 (또는 부분 적용)은 전통적인 객체지향 언어에서 팩토리 함수를 구현할 상황에 사용하면 좋다.
+* 예제 3-17 그루비의 덧셈 함수와 증가함수
+```
+defadder={x,y->x+y} 
+def incrementer = adder.curry(1)
+
+println "increment 7: ${incrementer(7)}" // 8
+```
+
+---
+### 3.3.1 정의와 차이점 - cont.
+#### 보편적인 용례
+##### | 템플릿 메서드 패턴 |
+* 템플릿 메서드 패턴의 목적은 구현의 유연성을 보장하기 위해서 내부의 추상 메서드를 사용하는 겉껍질을 정의하는 데 있다.
+* 부분 적용과 커링이 이 문제를 해결하는 데 사용된다.
+* 부분 적용을 사용하여 이미 알려진 긴으을 제공하고 나머지 인수들은 추후에 구현하도록 남겨두는 것은 이 객체지향 디자인 패턴을 구혀하는 것과 흡사하다.
+
+---
+### 3.3.1 정의와 차이점 - cont.
+#### 보편적인 용례
+##### | 묵시적 값 |
+* 예제 3-18 부분 적용을 사용하여 인수 값을 묵시적으로 제공하기
+```
+(defn db-connect [data-source query params] 
+	...)
+    
+(def dbc (partial db-connect "db/some-data-source"))
+
+(dbc "select * from %1" "cust")
+```
+* 데이터 소스를 제공하지 않고도 dbc 함수를 편리하게 사용
+
+---
+### 3.3.2 재귀
+#### 목록의 재조명 (Seeing Lists Differently)
+* 그루비는 함수형 구조를 더한 것을 포함해, 자바의 컬렉션 라이브러리를 엄청나게 커지게 만들었다.
+* 그루비가 제공하는 것 중 첫 번째는 목록을 다른 각도에서 보는 것이었다.
+* 예제 3-19 색인(명시적이지 않을 수 있음)을 사용한 목록 순회
+```
+def numbers=[6,28,4,9,12,4,8,8,11,45,99,2]
+
+def iterateList(listOfNums) { 
+	listOfNums.each { n ->
+    	println "${n}"
+  }
+}
+println "Iterate List"
+iterateList(numbers)
+```
+
+---
+### 3.3.2 재귀 - cont.
+#### 목록의 재조명 (Seeing Lists Differently)
+* 그림 3-1 색인된 위치로 본 목록
+![그림 3-1](https://github.com/happy4u/functional_thinking/blob/master/chapter3/figure3-1.gif)
+
+* 그림 3-2 머리와 꼬리로 본 목록
+![그림 3-2](https://github.com/happy4u/functional_thinking/blob/master/chapter3/figure3-2.gif)
+
+---
+### 3.3.2 재귀 - cont.
+#### 목록의 재조명 (Seeing Lists Differently)
+* 목록을 머리와 꼬리로 생각하면 예제 3-20처럼 재귀를 사용한 반복 처리가 가능
+* [예제 3-20 재귀를 사용한 목록 순환](https://github.com/happy4u/functional_thinking/blob/master/chapter3/3.3_ex_3-20.groovy)
+* 재귀는 종종 플랫폼마다 기술적 한계가 있기 때문에 만병통치약이 될 수는 없다. 하지만 길지 않은 목록을 처리하는 데에는 안전하다.
+
+---
+### 3.3.2 재귀 - cont.
+#### 목록의 재조명 (Seeing Lists Differently)
+* 재귀적으로 풀어내는 것이 어떤 이점이 있는지 다른 예제를 보자.
+* [예제 3-21 그루비에서의 명령형 필터](https://github.com/happy4u/functional_thinking/blob/master/chapter3/3.3_ex_3-21.groovy)
+* [예제 3-22 그루비에서의 재귀적 필터](https://github.com/happy4u/functional_thinking/blob/master/chapter3/3.3_ex_3-22.groovy)
+
+* 예제 3-21과 예제 3-22의 차이점은 '누가 상태를 관리하는가?'란 중요한 질문을 조명한다.
+	* 예제 3-21 : 이름이 new_list인 새 인수를 생성하고, 계속 추가해야 한다. 끝나면 그것을 리턴해야 한다.
+	* 예제 3-22 : 언어가 메서드 호출 시마다 리턴 값을 스택에서 쌓아가면서 관리한다. 
+		* filter() 메서드의 종료 경로는 항상 return이고 이렇게 중간 값을 스택에 쌓는다.
+		* 개발자는 new_list에 대한 책임을 양도하고 언어 자체가 그것을 관리해 준다.
+
+---
+### 3.3.2 재귀 - cont.
+#### 목록의 재조명 (Seeing Lists Differently)
+* 예제 3-22에서 살펴 본 것과 같은, 커링과 재귀를 결합한 필터 방법이 스칼라 같은 함수형 언어에서 사용하기에 적격이다.
+* [예제 3-23 스칼라에서의 재귀적 필터](https://github.com/happy4u/functional_thinking/blob/master/chapter3/3.3_ex_3-23.scala)
+	(1) 커링할 함수를 정의한다.
+	(2) filter는 컬렉션(nums)과 일인수 함수(커링된 dividesBy() 함수)를 매개변수로 받는다.
+* 가비지 컬렉션처럼 대단한 발전은 아니지만 재귀는 프로그래밍 언어의 중요한 흐름을 조명해 준다. '움직이는 부분'의 관리를 런타임에 양도하는 것이다. **개발자가 중간 값을 건드리지 못하게 하면 결국 그로 인한 오류도 생기지 않을 것이다.**
+
+---
+### 3.3.2 재귀 - cont.
+#### 목록의 재조명 (Seeing Lists Differently)
+꼬리 호출 최적화
+> 스택 증가는 재귀가 좀 더 보편화되지 못하는 주된 이유 중 하나이다. 재귀는 보통 중간 값을 스택에 보관하게끔 구현하는데, 재귀에 최적화되지 않은 언어에서는 스택 오버플로를 유발하게 된다. 스칼라나 클로저 같은 언어들은 이 제약을 몇 가지 방법으로 우회한다.
+> 재귀 호출이 함수에서 마지막 단계이면, 런타임이 스택을 증가시키지 않고 스택에 놓여 있는 결과를 교체할 수 있다.
+
+---
+## 3.4 스트림과 작업 재정렬
+* 명령형에서 함수형 스타일로 바꾸면 얻는 것 중의 하나가 런타임이 효율적인 결정을 할 수 있게 된다는 점이다.
+* 예제 3-24 회사 프로세스의 자바 8 버젼
+```
+public String cleanNames(List<String> names) { 
+	if (names == null) return "";
+	return names
+            .stream()
+            .map(e -> capitalize(e))
+            .filter(n -> n.length() > 1)
+            .collect(Collectors.joining(","));
+}
+```
+* [예제 2-4](https://github.com/happy4u/functional_thinking/tree/master/chapter2#212-함수형-처리---cont-1)와 살짝 달라진 점이 있음. map()작업이 filter()보다 먼저 실행된다.
+* 명령형 사고로는 당연히 필터 작업이 맵 작업보다 먼저 와야 한다. 그래야 맵 작업의 양이 줄어든다.
+* 함수형 언어에는 Stream이란 추상 개념이 정의되어 있다.
+
+---
+## 3.4 스트림과 작업 재정렬 - cont.
+* 예제 3-24에서 원천은 names 컬렉션이고 목적지(종점)는 collect() 함수이다. 이 두 작업 사이에 map()과 filter()는 **게으른** 함수이다. 다시 말하자면 이들은 실행을 가능하면 미룬다.
+* 영리한 런타임은 게으른 작업들을 재정렬할 수 있다. 예제 3-24에서 런타인은 필터를 맵 작업 전에 실행하여 게으른 작업을 효율적으로 재정렬할 수도 있다. 
+* 자바에 추가된 다른 많은 함수형 기능처럼 filter() 같은 함수에 주어진 람다 블록에 부수효과가 없어야 한다. 그렇지 않으면 예측할 수 없는 결과를 초래하게 된다.
+* 런타임에 최적화를 맡기는 것이 양도의 중요한 예이다. 시시콜콜한 세부사항은 버리고 문제 도메인의 **구현**에 집중하게 되는 것이다. 
