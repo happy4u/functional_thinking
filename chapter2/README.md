@@ -18,7 +18,7 @@
 ---
 ### 2.1.1 명령형 처리 (2/2)
 * 예제 2-1 전형적인 회사 프로세스(자바)
-```
+```java
 Example 2-1. Typical company process (in Java)
 package com.nealford.functionalthinking.trans;
 import java.util.List;
@@ -379,7 +379,7 @@ words.findAll {it.length() == 3}
 ```
 * dropWhile
 	* 목록의 앞부분만 필터하여 술어 조건을 만족시키는 **최다수**의 요소를 건너뛴다.
-```
+```groovy
 def words = ["the", "quick", "brown", "fox", "jumped", "over", "the", "lazy", "dog"]
 words.dropWhile {it.startsWith("t")}
 // [quick, brown, fox, jumped, over, the, lazy, dog]
@@ -494,12 +494,12 @@ words.collect {it.length()}
 ---
 ### 2.4.2 폴드/리듀스 - cont. (스칼라)
 * 합계를 내는 데에는 리듀스를 주로 사용
-```
+```scala
 List.range(1, 10) reduceLeft((a, b) => a + b) 
 // 45
 ```
 * 스칼라의 편리한 구문을 사용하여 함수를 간결하게 정의
-```
+```scala
 List.range(1, 10).reduceLeft(0)(_ + _) 
 // 45
 ```
