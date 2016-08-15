@@ -211,3 +211,135 @@ public interface F<A>{
 ---
 ### 5.5.2 Either 클래스 - cont.
 #### 게으른 파싱과 함수형 자바
+* Either 클래스는 함수형 알고리즘에 자주 사용된다.
+* [예제 5-22 함수형 자바를 사용하여 게으른 파서 생성하기](https://github.com/happy4u/functional_thinking/blob/master/chapter5/5.5_ex_5-22.java)
+	* P1클래스는 매개변수가 없는 -1()란 간단한 메서드의 단순한 래퍼이다.
+	* P1은 함수형 자바에서 코드 블록을 실행하지 않고 여기저기 전해주어서 원하는 컨텍스트에서 실행하게 해주는, 일종의 고계함수이다.
+* [예제 5-23 함수형 자바의 게으른 파서 테스트](https://github.com/happy4u/functional_thinking/blob/master/chapter5/5.5_ex_5-23.java)
+	* parse_lazy : 반드시 \_1()를 호출해서 결과를 풀어야 한다.
+	* parse_lazy_exception : **왼쪽** 값을 확인하고 풀어서 예외의 메세지를 알아낼 수 있다.
+* 이런 게으른 예외는 생성자의 실행을 지연하게 해준다.
+
+---
+### 5.5.2 Either 클래스 - cont.
+#### 디폴트 값을 제공하기
+* Either를 예외 처리에 사용하여 얻는 이점은 게으름만이 아니다. 디폴트 값을 제공한다는 것이 따른 점이다.
+* [예제 5-24 적당한 디폴트 리턴 값 제공하기](https://github.com/happy4u/functional_thinking/blob/master/chapter5/5.5_ex_5-24.java)
+* [예제 5-25 디폴트 값 테스트](https://github.com/happy4u/functional_thinking/blob/master/chapter5/5.5_ex_5-25.java)
+	* MAX보다 큰 로마숫자의 경우 디폴트로 MAX값을 가지게 했다.
+
+---
+### 5.5.2 Either 클래스 - cont.
+#### 예외 조건을 래핑하기
+* [예제 5-26 다른 곳에서 던진 예외를 처리하기](https://github.com/happy4u/functional_thinking/blob/master/chapter5/5.5_ex_5-26.java)
+* [예제 5-27 예외 래핑 테스트](https://github.com/happy4u/functional_thinking/blob/master/chapter5/5.5_ex_5-27.java)
+	* 예외가 생기면 Either의 왼쪽에 넣고, 그렇지 않으면 오른쪽 값으로 결과를 리턴
+	* Either를 사용하면 점검지정 예외(checked exception)를 포함한 모든 예외들을 함수형으로 바꿀 수 있다.
+
+---
+### 5.5.2 Either 클래스 - cont.
+#### 예외 조건을 래핑하기
+* [예제 5-28 게으른 예외 처리](https://github.com/happy4u/functional_thinking/blob/master/chapter5/5.5_ex_5-28.java)
+* [예제 5-29 던저진 예외를 처리하는 예제](https://github.com/happy4u/functional_thinking/blob/master/chapter5/5.5_ex_5-29.java)
+* 자바는 이런 개념을 근본적으로 포함하지 않기 때문에 Either 클래스를 모델링하기가 번거롭다. 
+* 스칼라와 같은 언어는 Either나 그와 유사한 구조물이 내장되어 있다.
+* 클로저나 그루비는 리턴 값을 쉽게 생성할 수 있는 동적 타이핑 언어이기 때문에 Either같은 것을 굳이 기본적으로 포함하지 않아도 된다.
+
+---
+### 5.5.3 옵션 클래스
+* Either는 두 부분을 가진 값을 간편하게 리턴할 수 있는 개념이다.
+* 여러 언어나 프레임워크에는 함수에서 리턴할 때 사용할 수 있는 Either와 유사한 Option이란 클래스가 있다.
+	* 적당한 값이 존재하지 않을 경우를 의미하는 none, 성공적인 리턴을 의미하는 some을 사용하여 예외 조건을 더 쉽게 표현한다.
+* 예제 5-30 Option 사용법
+  ```
+  public static Option<Double> divide(double x, double y) { 
+      if(y==0)
+          return Option.none(); 
+      return Option.some(x / y);
+  }
+  ```
+
+---
+### 5.5.3 옵션 클래스 - cont.
+* 예제 5-31 Option 기능 테스트하기
+  ```
+  @Test
+  public void option_test_success() {
+  Option result = FjRomanNumeralParser.divide(4.0, 2);
+  assertEquals(2.0, (Double) result.some(), 0.1);
+  }
+
+  @Test
+  public void option_test_failure() {
+  Option result = FjRomanNumeralParser.divide(4.0, 0);
+  assertEquals(Option.none(), result);
+  }
+  ```
+  * Either와 유사하지만 적당한 리턴 값이 없을 수 있는 메서드를 위해 none()과 some()을 가지고 있다.
+  * Option 클래스는 Either의 간단한 부분집합이라고 볼 수 있다.
+  * Either는 어떤 값이든 저장할 수 있는 반면, Option은 주로 성공과 실패의 값을 저장하는 데 쓰인다.
+
+---
+### 5.5.4 Either 트리와 패턴 매칭
+* 이 절에서는 트리 모양의 구조물을 만들면서 Either를 좀 더 살펴보자
+
+#### 스칼라 패턴 매칭
+* 스칼라의 훌륭한 기능 중의 하나는 디스패치에 패턴 매칭을 사용할 수 있다는 점이다.
+* [예제 5-32 스칼라 패턴 매칭을 사용하여 점수를 기준으로 학점 배정하기](https://github.com/happy4u/functional_thinking/blob/master/chapter5/5.5_ex_5-32.scala)
+* [예제 5-33 학점 평가 함수 테스트하기](https://github.com/happy4u/functional_thinking/blob/master/chapter5/5.5_ex_5-33.scala)
+	* [예제 5-32]의 letterGrad() 함수 전체가 주어진 값에 대한 match이다.
+	* 패턴 매칭은 스칼라의 케이스 클래스와 같이 사용된다.
+
+---
+### 5.5.4 Either 트리와 패턴 매칭 - cont.
+#### 스칼라 패턴 매칭
+* [예제 5-34 스칼라에서 케이스 클래스 매칭하기](https://github.com/happy4u/functional_thinking/blob/master/chapter5/5.5_ex_5-34.scala)
+	* 먼저 기본 Color 클래스를 만들고, 단색 버젼들을 케이스 클래스로 만들었다.
+	* 어떤 색이 함수에 넘겨졌는지를 알기 위해 match를 사용하여 가능한 모든 값에 대해 패턴 매칭을 시도한다.
+
+* 자바는 패턴 매칭을 지원하지 않는다. 그래서 스칼라처럼 깔끔하고 읽기 쉬운 디스패치 코드를 만들 수 없다.
+* 하지만 제네릭과 잘 알려진 자료구조를 같이 사용하면 어느 정도 가까이 갈 수 있다.
+
+---
+### 5.5.4 Either 트리와 패턴 매칭 - cont.
+#### Either 트리
+* Either의 추상 개념은 원하는 개수만큼 슬롯을 확장할 수 있다.
+  ```
+  Either <Empth, Either<Leaf, Node>>
+  ```
+  * empty : 셀에 아무 값도 없음
+  * leaf : 셀에 특정 자료형의 값이 들어 있음
+  * node : 다른 leaf나 node를 가리킴
+* [예제 5-35 Either로 만든 트리](https://github.com/happy4u/functional_thinking/blob/master/chapter5/5.5_ex_5-35.java)
+	* Tree 추상 클래스는 그 내부에 세 개의 final 구상 클래스를 정의. Empty, Leaf, Node
+	* 이 트리 구조는 내부적으로 \<Either, \<Leaf, Node>>를 바탕으로 하므로 패턴 매칭을 흉내내서 모든 요소를 순회할 수 있다.
+
+---
+### 5.5.4 Either 트리와 패턴 매칭 - cont.
+#### 패턴 매칭으로 트리 순회하기
+* 함수형 자바에서 구현된 Either의 left()와 right() 메서드는 모두 Iterable 인터페이스를 구현
+* 덕분에 트리의 깊이를 패턴 매칭 방식으로 알아내는 코드를 짤 수 있다.
+* [예제 5-36 패턴 매칭과 유사한 구문으로 트리의 깊이 알아내기](https://github.com/happy4u/functional_thinking/blob/master/chapter5/5.5_ex_5-36.java)
+	* 셀이 비어 있으면 그 가지는 깊이가 없고
+	* 셀이 leaf이면, 트리와 같은 레벨로 처리
+	* 셀이 node이면, 1을 레벨 값에 더하고 재귀적으로 왼쪽과 오른쪽을 모두 검색
+
+---
+### 5.5.4 Either 트리와 패턴 매칭 - cont.
+#### 패턴 매칭으로 트리 순회하기
+* [예제 5-37 트리에서 값의 존재 확인하기](https://github.com/happy4u/functional_thinking/blob/master/chapter5/5.5_ex_5-37.java)
+	* 빈 셀에 도달하면 검색이 실패했으므로 false 리턴
+	* leaf에서는 주어진 값을 확인하여 값이 같으면 true를 리턴
+	* node에 다다르면 비단축평가형 or 연산자인 |를 사용하여 트리를 재귀적으로 계속 검색하여 리턴되는 불리언 값과 결합
+* [예제 5-38 트리의 검색 기능성 테스트](https://github.com/happy4u/functional_thinking/blob/master/chapter5/5.5_ex_5-38.java)
+	* inTree() 메서드는 leaf 중 하나가 같은 값을 가지면 true를 리턴하고, 이 true 값은 | 연산자 때문에 재귀적인 호출 스택을 따라 위로 전달된다.
+
+---
+### 5.5.4 Either 트리와 패턴 매칭 - cont.
+#### 패턴 매칭으로 트리 순회하기
+* [예제 5-39 트리에서 발견 횟수 알아내기](https://github.com/happy4u/functional_thinking/blob/master/chapter5/5.5_ex_5-39.java)
+	* 트리 안에서 발견된 횟수를 세기 위해 같은 값을 가진 leaf마다 1을 리턴
+* [예제 5-40 복잡한 트리의 깊이, 존재, 횟수에 대한 테스트](https://github.com/happy4u/functional_thinking/blob/master/chapter5/5.5_ex_5-40.java)
+* 트리의 내부 구조를 규격화한 덕분에, 트릴르 따라가면서 각 요소의 자료형에 따른 경우에 대해서만 생각하며 분석할 수 있다.
+* 스칼라의 패턴 매칭처럼 표현이 풍부하지는 않지만, 이 구문은 놀랍게도 스칼라의 표현과 흡사하다.
+
