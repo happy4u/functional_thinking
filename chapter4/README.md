@@ -210,3 +210,124 @@ print length([2+1, 3*2, 1/0, 5-4])
 	* integers() : 맨 앞에 값이 하나만 주어지고 나머지 수를 생성하는 방식으로, 게으른 수의 목록을 만들어내는 공장처럼 작동한다.
 	* 이 목록에서 값을 꺼내려면 요구한 개수의 값을 리턴하는 getHead() 메서드를 사용해야 한다.
 
+---
+### 4.2.4 게으른 목록 만들기
+* 그루비는 근본적으로는 엄격한 언어이지만 클로저 내부에 엄격한 목록을 재귀적으로 포함해서 게으르지 ㅇ낳은 목록을 게으른 목록으로 변형할 수 있다.
+* 그루비에서 속이 비어 있는 엄격한 목록은 빈 대괄호([])를 써서 배열로 표현된다. 이것을 클로저에 감싸면 속이 빈 게으른 목록이 된다.
+  ```
+  { -> [ ] }
+  ```
+* 이 목록에 요소를 더하려면, 요소를 앞에 더해서 새로운 게으른 목록을 만들 수 있다.
+  ```
+  { -> [ a , { -> [ ] } ] }
+  ```
+* 전통적으로 목록의 앞에 요소를 더하는 메서드를 prepand나 cons라 부른다. 더 많은 요소를 더하고 싶으면 새 요소마다 이 작업을 반복하면 된다.
+* 다음은 a, b, c 세 요소를 목록에 더하는 방법이다.
+  ```
+  { -> [ a , { -> [ b , { -> [ c , { -> [ ] } ] } ] } ] }
+  ```
+ 
+---
+### 4.2.4 그루비의 게으른 목록 - cont.
+* [예제 4-18 그루비에서 게으른 목록 만들기](https://github.com/happy4u/functional_thinking/blob/master/chapter4/4.2_ex_4-18.groovy) 
+	* (1) 생성자는 비공개이며, nil()로 속이 빈 목록을 생성
+    * (2) cons() 메서드를 사용하면 주어진 매개변수를 새 요소로 앞에 덧붙이고 그 결과를 클로저 블록으로 감쌀 수 있게 된다.
+	* 다음 세 메서드를 사용하면 목록 순회가 가능
+		* head() : 목록의 첫 요소를 리턴
+		* tail() : 첫 요소를 제외한 모든 요소를 포함하는 부분목록을 리턴
+		* 두 경우 모두, 게으른 항들을 그 자리에서 평가하기 위해 클로저 블록을 call()해야 한다. 이 경우에 클로저 블록을 의도적으로 실행해서 값을 받아오기 때문에 이 클로저 블록은 더 이상 게으르다라고 할 수 없다.
+		* empty() : 계산할 항들이 아직 남아 있는지를 확인
+
+---
+### 4.2.4 그루비의 게으른 목록 - cont.
+* 예제 4-19 게으른 목록 작동해보기
+  ```
+  def lazylist = PLazyList.nil().cons(4).cons(3).cons(2).cons(1) 
+  println(lazylist.takeAll())
+  println(lazylist.foldAll(0, {i, j -> i + j}))
+  // [1, 2, 3, 4]
+  // 10
+
+  lazylist = PLazyList.nil().cons(1).cons(2).cons(4).cons(8) 
+  println(lazylist.take(2))
+  // [8, 4]
+  ```
+  * takeAll() : 모든 요소를 더해진 순서의 역순으로 리턴
+  * foldAll() : 주어진 변형 코드 블록{i, j -> i+j}을 통한 합을 구할 수 있다.
+* 현실적인 게으른 목록은 이것과는 다르게 재귀를 피하고 융통성 있는 메서드들을 덧붙여서 구현된다.
+* 하지만 내부의 구현 개념을 알면 게으른 목록을 이해하고 사용하는 데에도 도움이 될 것이다.
+
+---
+### 4.2.5 게으름의 이점 (그루비)
+* 게으른 목록의 이점
+	1. 무한 수열을 만들 수 있다.
+	2. 저장 시 크기가 줄어든다. 컬렉션 전부를 유지하지 않고 순차적으로 다음 값을 유도할 수 있으니 저장소와 실행 속도를 맞바꿀 수 있다.
+	3. 런타임이 좀 더 효율적인 코드를 만들 수 있다.
+* [예제 4-20 그루비를 사용한 회문 찾기](https://github.com/happy4u/functional_thinking/blob/master/chapter4/4.2_ex_4-20.groovy) 
+	* isPalindorome() : 주어진 단어를 소문자로 정규화하고, 그 단어의 글자들을 역순으로 나열해도 원래 단어와 똑같은지를 확인
+	* findFirstPalindrome() : find() 메서드를 사용해 첫번째 회문 단어를 찾으려 시도
+	* 아주 긴 문자열에서 첫 번째 회문을 찾아야 할 경우를 가정해 보면, tokenize() 메서드는 게으르지 않이 때문에 이 경우에는 금방 버려질 **엄청나게 큰 임시 자료구조**가 만들어질 수도 있다.
+
+---
+### 4.2.5 게으름의 이점 - cont. (클로저)
+* 예제 4-20과 예제 4-21은 같은 내용을 다른 언어 구조를 사용하여 구현한 것.
+* [예제 4-21 클로저를 사용한 회문 찾기](https://github.com/happy4u/functional_thinking/blob/master/chapter4/4.2_ex_4-21.clj)
+	* (palindrome? ) : 주어진 문자열을 소문자로 바꾸고 역순으로 된 문자열과 동일한지 확인
+		* apply : 앞뒤가 뒤바뀐 문자의 수열을 비교를 돕기 위해 문자열로 바꿔준다.
+	* (find-palindromes ) : 필터로 사용할 함수와 필터의 대상이 될 컬렉션을 매개변수로 받는 클로저의 (filter )함수를 사용
+	* 그루비에서 클로저로 바뀌는 과정은 단순한 구문 변화 이상을 의미한다.
+	* 클로저 버젼에서는 모든 것이 자동적으로 게으르게 만들어진다.
+	* (filter ) 함수는 출력 시에만 적극적으로 평가되는 게으른 컬렉션을 리턴한다.
+
+---
+### 4.2.5 게으름의 이점 - cont. (스칼라)
+* 스칼라는 약간 다른 방법으로 게으름에 접근한다.
+* 예제 4-22 스칼라를 사용한 회문 찾기
+  ```scala
+  def isPalindrome(x: String) = x == x.reverse
+  def findPalidrome(s: Seq[String]) = s find isPalindrome
+
+  findPalindrome(words take 1000000)
+  ```
+  * 첫 번째 회문을 찾는 것이 목적일 경우 take 메서드로 백만 개의 단어를 끄집어내 찾는 것은 아주 비효율적인 일일 것이다.
+  * 단어 컬렉션을 게으르게 변환하려면 view 메서드를 사용하면 된다.
+  ```
+  findPalindrome(words.view take 1000000)
+  ```
+  * view 메서드는 컬렉션을 게으르게 순회하게 하여 코드의 효율을 높인다.
+
+---
+### 4.2.6 게으른 필드 초기화
+* 두 가지 언어가 비용이 큰 초기화를 게으르게 만드는 데 좋은 기능을 제공한다는 것을 짚고 가겠다.
+* 스칼라에서는 val을 선언하는 곳 앞에 lazy를 사용하면 필드를 적극적 평가에서 적시 평가로 간단히 바꿀 수 있다.
+  ```
+  lazy val x = timeConsumingAndOrSizableComputation()
+  ```
+  * This is basically syntactic sugar for the code:
+  ```
+  var _x = None
+  def x = if (_x.isDefined) _x.get else {
+  	_x = Some(timeConsumingAndOrSizableComputation())
+  	_x.get 
+  }
+  ```
+
+---
+### 4.2.6 게으른 필드 초기화 - cont.
+* 그루비에도 유사한 기능이 있다. 이 기능은 ** 추상 구문 트리 Abstract Syntax Tree (AST)** 변형이라는 고급 언어 기능을 사용한다.
+* [예제 4-23 그루비의 게으른 필드](https://github.com/happy4u/functional_thinking/blob/master/chapter4/4.2_ex_4-23.groovy)
+	* Person의 인스턴스 p는 처음 사용되기 전까지는 Cat의 값이 정해지지 않는다.
+	
+* 클로저 블록을 사용한 자료구조의 값의 초기화를 지원
+  ```
+  class Person {
+      @Lazy List pets = { /* complex computation here */ }()
+  }
+  ```
+
+* 게으르게 초기화된 필드를 소프트 레퍼런스에 유지하게 만들기
+  ```
+  class Person {
+      @Lazy(soft = true) List pets = ['Cat', 'Dog', 'Bird']
+  }
+  ```
