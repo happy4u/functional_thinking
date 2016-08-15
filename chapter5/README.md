@@ -143,3 +143,71 @@
 
 ---
 ### 5.5.1 함수형 오류 처리
+* 자바에서 예외를 사용하지 않고 오류를 처리하기 위해 해결해야 할 근본적인 문제는 메서드가 하나의 값만 리턴할 수 있다는 제약이다.
+* 예제 5-14 Map을 사용하여 다중 리턴 값을 처리하기
+  ```
+  public static Map<String, Object> divide(int x, int y) {
+          Map<String, Object> result = new HashMap<String, Object>();
+          if(y==0)
+                  result.put("exception", new Exception("div by zero"));
+          else
+                  result.put("answer", (double) x / y);
+          return result;
+  }
+  ```
+  * divide() 메서드는 실패를 "exception"으로 표시하고, 성공은 "answer"로 표시한다.
+
+---
+### 5.5.1 함수형 오류 처리 - cont.
+* [예제 5-15 Map으로 성공과 실패를 테스트하기](https://github.com/happy4u/functional_thinking/blob/master/chapter5/5.5_ex_5-15.java)
+	* 이 접근 방법에는 문제점이 있다.
+		1. Map에 들어가는 값은 타입 세이프하지 않기 때문에 컴파일러가 오류를 잡아낼 수 없다. 열거형을 키로 사용하면 조금 좋아지기는 하겠지만, 근본적인 해결책은 아니다
+		2. 메서드 호출자는 리턴 값을 가능한 결과들과 비교해보기 전에는 성패를 알 수 없다.
+		3. 두 가지 결과가 모두 리턴 Map에 존재할 수가 있으므로, 그 경우에는 결과가 모호해진다.
+	* 여기서 필요한 것은 타입 세이프하게 둘 또는 더 많은 값을 리턴할 수 있게 해주는 메커니즘이다.
+
+---
+### 5.5.2 Either 클래스
+* 함수형 언어에서 다른 두 값을 리턴해야 하는 경우가 종종 있는데 그런 행동을 모델링하는 자료구조가 Either 클래스이다.
+* Either는 왼쪽 또는 오른쪽 값 중 하나만 가질 수 있게 설계되었다. 이런 자료구조를 **분리합집합**이라고 한다.
+* [예제 5-16 스칼라의 Either 클래스](https://github.com/happy4u/functional_thinking/blob/master/chapter5/5.5_ex_5-16.scala)
+	* [예제 5-16]에서처럼, Either는 오류 처리에서 주로 사용된다.
+
+* [예제 5-17 스칼라의 Either와 패턴 매칭](https://github.com/happy4u/functional_thinking/blob/master/chapter5/5.5_ex_5-17.scala)
+
+---
+### 5.5.2 Either 클래스 - cont.
+* 자바에 내장되지는 않았지만, 제네릭을 사용하면 [예제 5-18]에서 보듯이 간단한 대용품 Either 클래스를 만들 수 있다.
+```
+// 다음과 같은 식으로 F 인터페이스를 정의해야 예제 5-18을 사용할 수 있다.
+package com.nealford.ft.errorhandling;
+
+public interface F<A>{
+	public void f(A input);
+}
+```
+* [예제 5-18 Either 클래스를 통해 타입 세이프한 두 값을 리턴하기](https://github.com/happy4u/functional_thinking/blob/master/chapter5/5.5_ex_5-18.java)
+	* 실제 생성은 정적 메서드인 left(A a)와 right(B b)가 담당
+	* 함수형의 보편적인 관례에 따라 Either 클래스의 왼쪽이 예외, 오른쪽이 결과 값이다.
+
+---
+### 5.5.2 Either 클래스 - cont.
+#### 로마숫자 파싱
+* [예제 5-19]는 Either의 사용법을 설명하기 위해서 만든 RomanNumeral이란 클래스다.
+* [예제 5-19 자바로 단순하게 구현한 로마숫자](https://github.com/happy4u/functional_thinking/blob/master/chapter5/5.5_ex_5-19.java)
+* 예제 5-20 로마숫자 파싱하기
+  ```
+  public static Either<Exception, Integer> parseNumber(String s) { 
+    if (! s.matches("[IVXLXCDM]+"))
+        return Either.left(new Exception("Invalid Roman numeral")); 
+    else
+        return Either.right(new RomanNumeral(s).toInt());
+  }
+  ```
+* [예제 5-21 로마숫자 파싱 테스트](https://github.com/happy4u/functional_thinking/blob/master/chapter5/5.5_ex_5-21.java)
+* MAP 자료구조를 주고받던 것에 비해면 큰 발전이다. 예외를 얼마든지 세부화할 수 있으면 타입 세이프티를 지킬 수 있다.
+* 이런 우회 덕분에 게으름을 구현하는 것이 가능해진다.
+
+---
+### 5.5.2 Either 클래스 - cont.
+#### 게으른 파싱과 함수형 자바
