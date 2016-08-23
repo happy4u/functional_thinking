@@ -18,87 +18,87 @@
 ---
 ### 2.1.1 명령형 처리 (2/2)
 * 예제 2-1 전형적인 회사 프로세스(자바)
-```java
-Example 2-1. Typical company process (in Java)
-package com.nealford.functionalthinking.trans;
-import java.util.List;
+  ```java
+  Example 2-1. Typical company process (in Java)
+  package com.nealford.functionalthinking.trans;
+  import java.util.List;
 
-public class TheCompanyProcess {
-public String cleanNames(List<String> listOfNames) {
-	StringBuilder result = new StringBuilder(); 
-    	for(int i = 0; i < listOfNames.size(); i++) {
-		if (listOfNames.get(i).length() > 1) {
-        		result.append(capitalizeString(listOfNames.get(i))).append(",");
-		} 
-    }
-	return result.substring(0, result.length() - 1).toString(); }
+  public class TheCompanyProcess {
+  public String cleanNames(List<String> listOfNames) {
+      StringBuilder result = new StringBuilder(); 
+          for(int i = 0; i < listOfNames.size(); i++) {
+          if (listOfNames.get(i).length() > 1) {
+                  result.append(capitalizeString(listOfNames.get(i))).append(",");
+          } 
+      }
+      return result.substring(0, result.length() - 1).toString(); }
 
-	public String capitalizeString(String s) {
-    		return s.substring(0, 1).toUpperCase() + s.substring(1, s.length());
-	}
-}
-```
+      public String capitalizeString(String s) {
+              return s.substring(0, 1).toUpperCase() + s.substring(1, s.length());
+      }
+  }
+  ```
 ---
 ### 2.1.2 함수형 처리
 * 예제 2-2 '회사 프로세스'에 대한 의사코드
-```
-listOfEmps
-    -> filter(x.length > 1)
-    -> transform(x.capitalize)
-    -> convert(x + "," + y)
-```
+  ```
+  listOfEmps
+      -> filter(x.length > 1)
+      -> transform(x.capitalize)
+      -> convert(x + "," + y)
+  ```
 
 ---
 ### 2.1.2 함수형 처리 - cont.
 * 예제 2-3 스칼라의 함수형 처리
-```
-val employees = List("neal", "s", "stu", "j", "rich", "bob", "aiden", "j", "ethan", "liam", "mason", "noah", "lucas", "jacob", "jayden", "jack")
+  ```scala
+  val employees = List("neal", "s", "stu", "j", "rich", "bob", "aiden", "j", "ethan", "liam", "mason", "noah", "lucas", "jacob", "jayden", "jack")
 
-val result = employees 
-	.filter(_.length() > 1) 
-	.map(_.capitalize) 
-	.reduce(_ + "," + _)
-```
+  val result = employees 
+      .filter(_.length() > 1) 
+      .map(_.capitalize) 
+      .reduce(_ + "," + _)
+  ```
 
 ---
 ### 2.1.2 함수형 처리 - cont.
 * 예제 2-4 회사 프로세스의 자바 8 버젼
-```
-public String cleanNames(List<String> names) { 
-if (names == null) return "";
-return names
-                .stream()
-                .filter(name -> name.length() > 1)
-                .map(name -> capitalize(name))
-                .collect(Collectors.joining(","));
+  ```java
+  public String cleanNames(List<String> names) { 
+  if (names == null) return "";
+  return names
+                  .stream()
+                  .filter(name -> name.length() > 1)
+                  .map(name -> capitalize(name))
+                  .collect(Collectors.joining(","));
 
-private String capitalize(String e) {
-	return e.substring(0, 1).toUpperCase() + e.substring(1, e.length());
-}
-```
+  private String capitalize(String e) {
+      return e.substring(0, 1).toUpperCase() + e.substring(1, e.length());
+  }
+  ```
 
 ---
 ### 2.1.2 함수형 처리 - cont.
 * 예제 2-5 그루비로 처리하기
-```
-public static String cleanUpNames(listOfNames) { listOfNames
-        .findAll { it.length() > 1 }
-        .collect { it.capitalize() }
-        .join ','
-}
-```
+  ```groovy
+  public static String cleanUpNames(listOfNames) { listOfNames
+          .findAll { it.length() > 1 }
+          .collect { it.capitalize() }
+          .join ','
+  }
+  ```
 
 ---
 ### 2.1.2 함수형 처리 - cont.
 * 예제 2-6 클로저로 처리하기
-```
-(ns trans.core
-	(:require [clojure.string :as s]))
-    
-(defn process [list-of-emps] 
-	(reduce str (interpose ","
-		(map s/capitalize (filter #(< 1 (count %)) list-of-emps)))))
-```
+  ```clojure
+  (ns trans.core
+      (:require [clojure.string :as s]))
+
+  (defn process [list-of-emps] 
+      (reduce str (interpose ","
+          (map s/capitalize (filter #(< 1 (count %)) list-of-emps)))))
+  ```
 *내 생각 : 클로저를 처음 접했는데, 다른 언어와 비교하면 클로저는 외계어처럼 느껴진다.*
 
 * 클로저 코드를 읽는 데 익숙하지 않다면 코드 구조를 이해하기가 어려울 거다. 클로저와 같은 리스프 계열 언어는 '안에서 밖으로' 실행되므로 마지막 매개변수 값인 list-of-emps에서 시작해야 한다.
@@ -116,27 +116,27 @@ public static String cleanUpNames(listOfNames) { listOfNames
 * java의 명령형 코드를 병렬처리화 한다고 생각해보자 --;;
 * 예제 2-8 스칼라에서의 병렬처리
 	* 스트림에 par만 붙이면 된다.
-```
-val parallelResult = employees 
-	.par
-	.filter(_.length() > 1)
-	.map(_.capitalize)
-	.reduce(_ + "," + _)
-```
+  ```java
+  val parallelResult = employees 
+      .par
+      .filter(_.length() > 1)
+      .map(_.capitalize)
+      .reduce(_ + "," + _)
+  ```
 
 ---
 ### 2.1.2 함수형 처리 - cont.
 * 예제 2-9 자바 8에서의 분산처리
 	* parallelStream만 추가
-```
-public String cleanNamesP(List<String> names) { if (names == null) return "";
-return names
-                .parallelStream()
-                .filter(n -> n.length() > 1)
-                .map(e -> capitalize(e))
-                .collect(Collectors.joining(","));
-}
-```
+  ```java
+  public String cleanNamesP(List<String> names) { if (names == null) return "";
+  return names
+                  .parallelStream()
+                  .filter(n -> n.length() > 1)
+                  .map(e -> capitalize(e))
+                  .collect(Collectors.joining(","));
+  }
+  ```
 
 ---
 ### 2.1.2 함수형 처리 - cont.
@@ -197,21 +197,21 @@ return names
 * 목록(Lists)에서 할 수 있는 흔한 작업은 필터하는 것이다.
 * 필터 작업을 할 때에는 필터 조건에 따라서 원래 목록보다 작은 목록(또는 컬렉션)을 생성한다.
 * 예제 2-14 자바 8에서의 필터 작업
-```
-public static IntStream factorsOf(int number) {
-        return range(1, number + 1)
-               .filter(potential -> number % potential == 0);
-}
-```
+  ```java
+  public static IntStream factorsOf(int number) {
+          return range(1, number + 1)
+                 .filter(potential -> number % potential == 0);
+  }
+  ```
 ---
 ### 2.3.1 필터 - cont.
 * 람다 블록이 있는 언어에서는 더 간결하게 표현할 수 있다.
 * 예제 2-15 그루비에서의 필터 작업(그루비에서는 필터를 findAll()이라고 부른다)
-```
-static def factors(number) {
-        (1..number).findAll {number % it == 0}
-}
-```
+  ```groovy
+  static def factors(number) {
+          (1..number).findAll {number % it == 0}
+  }
+  ```
 
 ---
 ### 2.3.2 맵
@@ -228,12 +228,12 @@ static def factors(number) {
 ### 2.3.2 맵 - cont.
 * 그루비는 물론 함수형 변형 함수들을 포함하고 있다. 예제 2-17에서 보듯이 collect()가 map()의 그루비 버젼이다.
 * 예제 2-17 그루비로 최적화된 factors
-```
-static def factors(number) {
-        def factors = (1..round(sqrt(number)+1)).findAll({number % it == 0}) 
-        (factors + factors.collect {number / it}).unique()
-}
-```
+  ```groovy
+  static def factors(number) {
+          def factors = (1..round(sqrt(number)+1)).findAll({number % it == 0}) 
+          (factors + factors.collect {number / it}).unique()
+  }
+  ```
 
 ---
 ### 2.3.2 맵 - cont.
@@ -277,142 +277,141 @@ static def factors(number) {
 ---
 ### 2.4.1 필터 - cont. (스칼라)
 * 각 숫자가 3으로 나뉘어야 한다는 조건을 가진 코드 블럭을 넘겨 filter() 함수를 적용
-```
-val numbers = List.range(1, 11) 
-numbersfilter(x=>x%3==0) 
-// List(3, 6, 9)
-```
+  ```scala
+  val numbers = List.range(1, 11) 
+  numbers filter( x => x % 3 == 0) 
+  // List(3, 6, 9)
+  ```
 * 묵시적 매개변수를 사용하면 더 간결한 코드 블록을 만들 수 있다.
-```
-numbers filter (_ % 3 == 0) 
-// List(3, 6, 9)
-```
+  ```scala
+  numbers filter (_ % 3 == 0) 
+  // List(3, 6, 9)
+  ```
 * 스칼라에서는 매개변수를 언더바로 치환하는게 가능. 	 
 
 ---
 ### 2.4.1 필터 - cont. (스칼라)
 * filter()는 어떤 컬렉션에도 적용할 수 있다.
 * filter()를 단어 목록에 적용하여 세 글자 단어들을 얻어낸다.
-```
-val words = List("the", "quick", "brown", "fox", "jumped", "over", "the", "lazy", "dog")
-words filter (_.length == 3) 
-// List(the, fox, the, dog)
-```
+  ```scala
+  val words = List("the", "quick", "brown", "fox", "jumped", "over", "the", "lazy", "dog")
+  words filter (_.length == 3) 
+  // List(the, fox, the, dog)
+  ```
 
 ---
 ### 2.4.1 필터 - cont. (스칼라)
 * 스칼라의 필터 연산 중 다른 한 가지는 컬렉션을 여러 조각으로 분리한 결과를 리턴하는 partition() 함수이다.
 * partition() 함수는 3으로 나뉘는가 여부에 따라 분리된 두 목록을 리턴한다.
-```
-numbers partition (_ % 3 == 0)
-// (List(3, 6, 9),List(1, 2, 4, 5, 7, 8, 10))
-```
+  ```scala
+  numbers partition (_ % 3 == 0)
+  // (List(3, 6, 9),List(1, 2, 4, 5, 7, 8, 10))
+  ```
 
 ---
 ### 2.4.1 필터 - cont. (스칼라)
 * find() 함수는 조건을 만족시키는 첫 번째 요소만 리턴한다.
-```
-numbers find (_ % 3 == 0) 
-// Some(3)
-```
+  ```scala
+  numbers find (_ % 3 == 0) 
+  // Some(3)
+  ```
 * find()의 리턴 값은 조건을 만족시킨 값 자체가 아니고, Option 클래스로 래핑된 값이다. Option은 Some 또는 None 두 가지 값을 가질 수 있다.
 * 다른 함수형 언어들과 마찬가지로 스칼라는 null을 리턴하는 것을 피하기 위해 관례적으로 Option을 사용한다. 
 * 리턴할 값이 없는 경우에는 대신 None을 리턴한다.
-```
-numbers find (_ < 0) 
-// None
-```
+  ```scala
+  numbers find (_ < 0) 
+  // None
+  ```
 
 ---
 ### 2.4.1 필터 - cont. (스칼라)
 * 스칼라는 컬렉션에서 주어진 술어 함수에 만족시키는 요소를 간직하거나 또는 버리는 함수들도 가지고 있다. 
 * takeWhile() 함수는 컬렉션의 앞에서부터 술어 함수를 만족시키는 값들의 최대 집합을 리턴한다.
-```
-List(1, 2, 3, -4, 5, 6, 7, 8, 9, 10) takeWhile (_ > 0) 
-// List(1, 2, 3)
-```
+  ```scala
+  List(1, 2, 3, -4, 5, 6, 7, 8, 9, 10) takeWhile (_ > 0) 
+  // List(1, 2, 3)
+  ```
 * dropWhile() 함수는 술어 함수를 만족시키는 최다수의 요소를 건너뛴다.
-```
-words dropWhile (_ startsWith "t")
-// List(quick, brown, fox, jumped, over, the, lazy, dog)
-``` 
+  ```scala
+  words dropWhile (_ startsWith "t")
+  // List(quick, brown, fox, jumped, over, the, lazy, dog)
+  ``` 
 
 ---
 ### 2.4.1 필터 - cont. (그루비)
 * 그루비는 함수형 언어라고는 할 수는 없지만 스크립팅 언어에서 파생된 이름을 가진 함수형 패러다임을 다수 포함하고 있다.
 * findAll() 메서드는 함수형 언어에서 전통적으로 filter()라고 불리는 함수이다.
-```
-(1..10).findAll {it % 3 == 0} 
-// [3, 6, 9]
-```
+  ```groovy
+  (1..10).findAll {it % 3 == 0} 
+  // [3, 6, 9]
+  ```
 * filterAll()은 문자열을 포함해 모든 자료형에 적용된다.
-```
-def words = ["the", "quick", "brown", "fox", "jumped", "over", "the", "lazy", "dog"]
-words.findAll {it.length() == 3} 
-// [The, fox, the, dog]
-```
+  ```groovy
+  def words = ["the", "quick", "brown", "fox", "jumped", "over", "the", "lazy", "dog"]
+  words.findAll {it.length() == 3} 
+  // [The, fox, the, dog]
+  ```
 
 ---
 ### 2.4.1 필터 - cont. (그루비)
 * split()이라는, partition()과 유사한 함수도 있다.
-```
-(1..10).split {it % 3}
-// [ [1, 2, 4, 5, 7, 8, 10], [3, 6, 9] ]
-```
+  ```groovy
+  (1..10).split {it % 3}
+  // [ [1, 2, 4, 5, 7, 8, 10], [3, 6, 9] ]
+  ```
 * find() : 컬렉션에서 조건을 만족시키는 첫 요소를 리턴
-```
-(1..10).find {it % 3 == 0}
-// 3
-```
+  ```groovy
+  (1..10).find {it % 3 == 0}
+  // 3
+  ```
 * 그루비는 자바의 관례를 따라서 find()의 결과가 없을 때는 null을 리턴
-```
-(1..10).find {it < 0} 
-// null
-```
+  ```groovy
+  (1..10).find {it < 0} 
+  // null
+  ```
 
 ---
 ### 2.4.1 필터 - cont. (그루비)
 * takeWhile
-```
-[1, 2, 3, -4, 5, 6, 7, 8, 9, 10].takeWhile {it > 0} 
-// [1, 2, 3]
-```
+  ```groovy
+  [1, 2, 3, -4, 5, 6, 7, 8, 9, 10].takeWhile {it > 0} 
+  // [1, 2, 3]
+  ```
 * dropWhile
 	* 목록의 앞부분만 필터하여 술어 조건을 만족시키는 **최다수**의 요소를 건너뛴다.
-```groovy
-def words = ["the", "quick", "brown", "fox", "jumped", "over", "the", "lazy", "dog"]
-words.dropWhile {it.startsWith("t")}
-// [quick, brown, fox, jumped, over, the, lazy, dog]
+  ```groovy
+  def words = ["the", "quick", "brown", "fox", "jumped", "over", "the", "lazy", "dog"]
+  words.dropWhile {it.startsWith("t")}
+  // [quick, brown, fox, jumped, over, the, lazy, dog]
 
-def moreWords = ["the", "two", "ton"] + words 
-moreWords.dropWhile {it.startsWith("t")}
-// [quick, brown, fox, jumped, over, the, lazy, dog]
-```
+  def moreWords = ["the", "two", "ton"] + words 
+  moreWords.dropWhile {it.startsWith("t")}
+  // [quick, brown, fox, jumped, over, the, lazy, dog]
+  ```
 
 ---
 ### 2.4.1 필터 - cont. (클로저)
 * 클로저에는 컬렉션을 조작하는 루틴들이 놀라울 만큼 많이 있다.
 * 클로저의 동적 타이핑 덕분에 이것들은 범용적으로 사용할 수 있어서 아주 유용하다.
 * 클로저는 (filter ) 함수에서 볼 수 있듯이, 전통적인 함수형 프로그래밍 이름을 사용한다.
-
-```
-(def numbers (range 1 11))
-(filter (fn [x] (= 0 (rem x 3))) numbers) 
-; (3 6 9)
-```
+  ```clojure
+  (def numbers (range 1 11))
+  (filter (fn [x] (= 0 (rem x 3))) numbers) 
+  ; (3 6 9)
+  ```
 * 익명함수를 사용한 간결한 문법
-```
-(filter #(zero? (rem % 3)) numbers) 
-; (3 6 9)
-```
+  ```clojure
+  (filter #(zero? (rem % 3)) numbers) 
+  ; (3 6 9)
+  ```
 
 ---
 ### 2.4.1 필터 - cont. (클로저)
 * 함수들은 문자열 등 어떤 자료형에도 사용할 수 있다.
-```
-(def words ["the" "quick" "brown" "fox" "jumped" "over" "the" "lazy" "dog"]) (filter #(= 3 (count %)) words)
-; (the fox the dog)
-```
+  ```clojure
+  (def words ["the" "quick" "brown" "fox" "jumped" "over" "the" "lazy" "dog"]) (filter #(= 3 (count %)) words)
+  ; (the fox the dog)
+  ```
 * 클로저에서 (filter )의 리턴 자료형은 ()로 표기되는 Seq이다. Seq 인터페이스는 클로저의 순차적 컬렉션의 주요 추상 개념이다.
 
 ---
@@ -422,70 +421,70 @@ moreWords.dropWhile {it.startsWith("t")}
 ---
 ### 2.4.2 맵 - cont. (스칼라)
 * map() : 코드 블록을 받아서 변형된 컬렉션을 리턴
-```
-List(1,2,3,4,5)map(_+1)
-// List(2, 3, 4, 5, 6)
-```
+  ```scala
+  List(1,2,3,4,5)map(_+1)
+  // List(2, 3, 4, 5, 6)
+  ```
 * 문자열의 각 요소의 길이를 목록으로 리턴
-```
-words map (_.length)
-// List(3, 5, 5, 3, 6, 4, 3, 4, 3)
-```
+  ```scala
+  words map (_.length)
+  // List(3, 5, 5, 3, 6, 4, 3, 4, 3)
+  ```
 
 ---
 ### 2.4.2 맵 - cont. (스칼라)
 * 중첩을 펼치는 연산을 라이브러리에서 지원하는데 이를 흔히 플래트닝이라고 한다.
-```
-List(List(1, 2, 3), List(4, 5, 6), List(7, 8, 9)) flatMap (_.toList) 
-// List(1, 2, 3, 4, 5, 6, 7, 8, 9)
-```
+  ```scala
+  List(List(1, 2, 3), List(4, 5, 6), List(7, 8, 9)) flatMap (_.toList) 
+  // List(1, 2, 3, 4, 5, 6, 7, 8, 9)
+  ```
 * 문자열의 목록은 중첩된 문자들의 배열로 볼 수 있다.
-```
-words flatMap (_.toList)
-// List(t, h, e, q, u, i, c, k, b, r, o, w, n, f, o, x, ...
-```
+  ```scala
+  words flatMap (_.toList)
+  // List(t, h, e, q, u, i, c, k, b, r, o, w, n, f, o, x, ...
+  ```
 
 ---
 ### 2.4.2 맵 - cont. (그루비)
 * 맵의 변형인 collect()를 가지고 있다.
-```
-(1..5).collect {it += 1} 
-// [2, 3, 4, 5, 6]
-```
+  ```groovy
+  (1..5).collect {it += 1} 
+  // [2, 3, 4, 5, 6]
+  ```
 * 문자열 배열에도 사용 가능
-```
-def words = ["the", "quick", "brown", "fox", "jumped", "over", "the", "lazy", "dog"]
-words.collect {it.length()} 
-// [3, 5, 5, 3, 6, 4, 3, 4, 3]
-```
+  ```groovy
+  def words = ["the", "quick", "brown", "fox", "jumped", "over", "the", "lazy", "dog"]
+  words.collect {it.length()} 
+  // [3, 5, 5, 3, 6, 4, 3, 4, 3]
+  ```
 * flatten() : flatMap()과 유사
-```
-[ [1, 2, 3], [4, 5, 6], [7, 8, 9] ].flatten() 
-// [1, 2, 3, 4, 5, 6, 7, 8, 9]
+  ```groovy
+  [ [1, 2, 3], [4, 5, 6], [7, 8, 9] ].flatten() 
+  // [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-(words.collect {it.toList()}).flatten()
-// [t, h, e, q, u, i, c, k, b, r, o, w, n, f, o, x, j, ...
-```
+  (words.collect {it.toList()}).flatten()
+  // [t, h, e, q, u, i, c, k, b, r, o, w, n, f, o, x, j, ...
+  ```
 
 ---
 ### 2.4.2 맵 - cont. (클로저)
 * (map )
-```
-(def numbers (range 1 11))
-(map inc numbers)
-; (2 3 4 5 6 7 8 9 10 11)
-```
+  ```clojure
+  (def numbers (range 1 11))
+  (map inc numbers)
+  ; (2 3 4 5 6 7 8 9 10 11)
+  ```
 * (map ) 함수의 첫째 매개변수는 단일 매개변수를 하나만 받는 어떤 함수든 될 수 있다. 기명함수, 익명함수, 또는 전달된 인수의 값을 증가하는 inc 같은 내장함수도 가능.
 * 단어들의 길이를 컬렉션으로 만드는 예제
-```
-(map #(count %) words) 
-; (3 5 5 3 6 4 3 4 3)
-```
+  ```clojure
+  (map #(count %) words) 
+  ; (3 5 5 3 6 4 3 4 3)
+  ```
 * (flatten )
-```
-(flatten[[123][456][789]])
-; (1 2 3 4 5 6 7 8 9)
-```
+  ```clojure
+  (flatten[[123][456][789]])
+  ; (1 2 3 4 5 6 7 8 9)
+  ```
 
 ---
 ### 2.4.2 폴드/리듀스
@@ -494,82 +493,80 @@ words.collect {it.length()}
 ---
 ### 2.4.2 폴드/리듀스 - cont. (스칼라)
 * 합계를 내는 데에는 리듀스를 주로 사용
-```scala
-List.range(1, 10) reduceLeft((a, b) => a + b) 
-// 45
-```
+  ```scala
+  List.range(1, 10) reduceLeft((a, b) => a + b) 
+  // 45
+  ```
 * 스칼라의 편리한 구문을 사용하여 함수를 간결하게 정의
-```scala
-List.range(1, 10).reduceLeft(0)(_ + _) 
-// 45
-```
+  ```scala
+  List.range(1, 10).reduceLeft(0)(_ + _) 
+  // 45
+  ```
 
 ---
 ### 2.4.2 폴드/리듀스 - cont. (스칼라)
 * reduceLeft() : 첫째 요소가 연산의 좌항
 * reduceRight() : 연산자가 적용되는 순서를 뛰바꿈
-```
-List.range(1, 10) reduceRight(_ - _)
-// 8 -    9  = -1
-// 7 - (-1) = 8
-// 6 -    8  = -2
-// 5 - (-2) = 7
-// 4 -    7  = -3
-// 3 - (-3) = 6
-// 2 -    6 = -4
-// 1 - (-4) = 5
-// result: 5
-```
+  ```scala
+  List.range(1, 10) reduceRight(_ - _)
+  // 8 -    9  = -1
+  // 7 - (-1) = 8
+  // 6 -    8  = -2
+  // 5 - (-2) = 7
+  // 4 -    7  = -3
+  // 3 - (-3) = 6
+  // 2 -    6 = -4
+  // 1 - (-4) = 5
+  // result: 5
+  ```
 * 8-9를 먼저 연산하고, 그 결과를 다시 다음 연산의 **두 번째** 매개변수로 사용한다.
 * 리듀스와 같은 고수준의 추상 개념을 어떤 경우에 사용하는가를 터득하는 것이 함수형 프로그래밍을 마스터하는 방법 중의 하나이다.
 
 ---
 ### 2.4.2 폴드/리듀스 - cont. (스칼라)
 * 컬렉션에 들어 있는 가장 긴 단어를 찾아낸다.
-```
-def words = ["the", "quick", "brown", "fox", "jumped", "over", "the", "lazy", "dog"]
-words.reduceLeft((a, b) => if (a.length > b.length) a else b) // jumped
-```
+  ```scala
+  def words = ["the", "quick", "brown", "fox", "jumped", "over", "the", "lazy", "dog"]
+  words.reduceLeft((a, b) => if (a.length > b.length) a else b) // jumped
+  ```
 
 ---
 ### 2.4.2 폴드/리듀스 - cont. (스칼라)
 * flodLeft()를 사용해서 컬렉션을 합하는 예제 - 초기값을 받는 형태
-```
-List.range(1, 10).foldLeft(0)(_ + _)
-// 45
-```
+  ```scala
+  List.range(1, 10).foldLeft(0)(_ + _)
+  // 45
+  ```
 * 스칼라는 연산자 오버로딩을 지원
 * flodLeft와 foldRight는 상응하는 연산자 :/과 :\가 있다
-```
-(0 /: List.range(1, 10)) (_ + _) 
-// 45
-```
+  ```scala
+  (0 /: List.range(1, 10)) (_ + _) 
+  // 45
+  ```
 * foldRight or :\ 연산자를 사용하여 목록 각 요서간의 계단식 차를 구하기
-```
-(List.range(1, 10) :\ 0) (_ - _) 
-// 5
-```
+  ```scala
+  (List.range(1, 10) :\ 0) (_ - _) 
+  // 5
+  ```
 
 ---
 ### 2.4.2 폴드/리듀스 - cont. (그루비)
 * 리듀스 계열의 inject() 함수에 오버로딩을 사용하여 스칼라의 reduce()와 foldLeft()의 기능을 제공
-```
-(1..10).inject {a, b -> a + b} 
-// 55
-```
+  ```groovy
+  (1..10).inject {a, b -> a + b} 
+  // 55
+  ```
 * 초기 값을 받는 다른 형태
-```
-(1..10).inject(0, {a, b -> a + b}) 
-// 55
-```
+  ```groovy
+  (1..10).inject(0, {a, b -> a + b}) 
+  // 55
+  ```
 
 ---
 ### 2.4.2 폴드/리듀스 - cont. (클로저)
 * (reduce ) 함수는 선택적으로 초기 값을 받아서 스칼라의 reduce()와 foldLeft() 두 경우를 해결
-```
-(reduce + (range 1 11)) 
-; 55
-```
+  ```clojure
+  (reduce + (range 1 11)) 
+  ; 55
+  ```
 * 클로저는 리듀서 같은 고급 기능을 제공하는 [리듀서 라이브러리](http://clojure.org/reference/reducers)를 제공한다.
-
-
