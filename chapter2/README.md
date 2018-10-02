@@ -331,7 +331,8 @@ static def factors(number) {
 * filter()는 어떤 컬렉션에도 적용할 수 있다.
 * filter()를 단어 목록에 적용하여 세 글자 단어들을 얻어낸다.
   ```scala
-  val words = List("the", "quick", "brown", "fox", "jumped", "over", "the", "lazy", "dog")
+  val words = List("the", "quick", "brown", "fox", "jumped"
+  		, "over", "the", "lazy", "dog")
   words filter (_.length == 3) 
   // List(the, fox, the, dog)
   ```
@@ -370,6 +371,8 @@ static def factors(number) {
   ```
 * dropWhile() 함수는 술어 함수를 만족시키는 최다수의 요소를 건너뛴다.
   ```scala
+  val words = List("the", "quick", "brown", "fox", "jumped"
+  		, "over", "the", "lazy", "dog")
   words dropWhile (_ startsWith "t")
   // List(quick, brown, fox, jumped, over, the, lazy, dog)
   ``` 
@@ -384,7 +387,8 @@ static def factors(number) {
   ```
 * filterAll()은 문자열을 포함해 모든 자료형에 적용된다.
   ```groovy
-  def words = ["the", "quick", "brown", "fox", "jumped", "over", "the", "lazy", "dog"]
+  def words = ["the", "quick", "brown", "fox", "jumped"
+  	, "over", "the", "lazy", "dog"]
   words.findAll {it.length() == 3} 
   // [The, fox, the, dog]
   ```
@@ -417,7 +421,8 @@ static def factors(number) {
 * dropWhile
 	* 목록의 앞부분만 필터하여 술어 조건을 만족시키는 **최다수**의 요소를 건너뛴다.
   ```groovy
-  def words = ["the", "quick", "brown", "fox", "jumped", "over", "the", "lazy", "dog"]
+  def words = ["the", "quick", "brown", "fox", "jumped"
+  	, "over", "the", "lazy", "dog"]
   words.dropWhile {it.startsWith("t")}
   // [quick, brown, fox, jumped, over, the, lazy, dog]
 
@@ -446,7 +451,8 @@ static def factors(number) {
 ### 2.4.1 필터 - cont. (클로저)
 * 함수들은 문자열 등 어떤 자료형에도 사용할 수 있다.
   ```clojure
-  (def words ["the" "quick" "brown" "fox" "jumped" "over" "the" "lazy" "dog"]) (filter #(= 3 (count %)) words)
+  (def words ["the" "quick" "brown" "fox" "jumped" "over" "the" "lazy" "dog"]) 
+  (filter #(= 3 (count %)) words)
   ; (the fox the dog)
   ```
 * 클로저에서 (filter )의 리턴 자료형은 ()로 표기되는 Seq이다. Seq 인터페이스는 클로저의 순차적 컬렉션의 주요 추상 개념이다.
@@ -490,7 +496,8 @@ static def factors(number) {
   ```
 * 문자열 배열에도 사용 가능
   ```groovy
-  def words = ["the", "quick", "brown", "fox", "jumped", "over", "the", "lazy", "dog"]
+  def words = ["the", "quick", "brown", "fox", "jumped"
+  	, "over", "the", "lazy", "dog"]
   words.collect {it.length()} 
   // [3, 5, 5, 3, 6, 4, 3, 4, 3]
   ```
@@ -563,7 +570,8 @@ static def factors(number) {
 ### 2.4.2 폴드/리듀스 - cont. (스칼라)
 * 컬렉션에 들어 있는 가장 긴 단어를 찾아낸다.
   ```scala
-  def words = ["the", "quick", "brown", "fox", "jumped", "over", "the", "lazy", "dog"]
+  def words = ["the", "quick", "brown", "fox", "jumped"
+  	, "over", "the", "lazy", "dog"]
   words.reduceLeft((a, b) => if (a.length > b.length) a else b) // jumped
   ```
 
@@ -607,3 +615,9 @@ static def factors(number) {
   ; 55
   ```
 * 클로저는 리듀서 같은 고급 기능을 제공하는 [리듀서 라이브러리](http://clojure.org/reference/reducers)를 제공한다.
+
+---
+### 2.4.2 마무리
+
+새로운 어휘를 배우는 것이 함수형 프로그래밍 같은 새로운 패러다임을 배우는 과정에서의 어려운 점 중 하나이다. 여러 커뮤니티에서 다른 어휘를 사용하는 바람에 이것이 더욱 어려워졌다.
+하지만 일단 그것들의 유사성을 터득하면 문법적으로 놀랍게도 함수형 언어들이 중복되는 기능을 지원한다는 것을 깨달을 것이다.
