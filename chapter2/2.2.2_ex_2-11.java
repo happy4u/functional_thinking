@@ -39,3 +39,7 @@ public class NumberClassifier {
         return aliquotSum(factors(number)) < number;
     }
 }
+
+// _factor : 인수 - 기원이 되는 수, 인연이 있는 수_
+// _aliquot : 약수 - 어떤 정수를 나머지 없이 나눌 수 있는 정수_
+// _인수는 곱셈에 기반하고 약수는 나눗셈에 기반함_

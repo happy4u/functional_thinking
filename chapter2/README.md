@@ -9,14 +9,14 @@
 * 개발자들은 가비지컬렉션에서 얻었던 것같이 복잡성이 낮아지고 성능이 높아지는 혜택을 받게 될 것이다.
 
 ---
-### 2.1.1 명령형 처리 (1/2)
+### 2.1.1 명령형 처리 (1/3)
 * 명령형 프로그래밍이란 상태를 변형하는 일련의 명령들로 구성된 프로그래밍 방식을 말한다.
 
 * 다음 예제는 어떤 이름 목록에서 한 글자로 된 이름을 제외한 모든 이름을 대문자화해서 쉼표로 연결한 문자열을 구하는 코드의 예이다.
 
 
 ---
-### 2.1.1 명령형 처리 (2/2)
+### 2.1.1 명령형 처리 (2/3)
 * 예제 2-1 전형적인 회사 프로세스(자바)
 ```java
 Example 2-1. Typical company process (in Java)
@@ -24,23 +24,35 @@ package com.nealford.functionalthinking.trans;
 import java.util.List;
 
 public class TheCompanyProcess {
-public String cleanNames(List<String> listOfNames) {
-	StringBuilder result = new StringBuilder(); 
-    	for(int i = 0; i < listOfNames.size(); i++) {
-		if (listOfNames.get(i).length() > 1) {
-        		result.append(capitalizeString(listOfNames.get(i))).append(",");
-		} 
+    public String cleanNames(List<String> listOfNames) {
+        StringBuilder result = new StringBuilder(); 
+            for(int i = 0; i < listOfNames.size(); i++) {
+            if (listOfNames.get(i).length() > 1) {
+                    result.append(capitalizeString(listOfNames.get(i)))
+                        .append(",");
+            } 
+        }
+        return result.substring(0, result.length() - 1).toString(); 
     }
-	return result.substring(0, result.length() - 1).toString(); }
 
-	public String capitalizeString(String s) {
-    		return s.substring(0, 1).toUpperCase() + s.substring(1, s.length());
-	}
+    public String capitalizeString(String s) {
+    	return s.substring(0, 1).toUpperCase() 
+        	+ s.substring(1, s.length());
+    }
 }
 ```
+
+---
+### 2.1.1 명령형 처리 (3/3)
+* 한 글짜짜리 이름을 **필터했고**, 목록에 남아 있는 이름들을 대문자로 **변형하고**, 이 목록을 하나의 문자열로 **변환했다**.
+
+
 ---
 ### 2.1.2 함수형 처리
-* 예제 2-2 '회사 프로세스'에 대한 의사코드
+
+* 함수형 프로그래밍 언어는 명령형 언어와는 다르게 문제를 분류한다. 앞에서 언급한 **필터, 변형, 변환** 등의 논리적 분류도 저수준의 변형을 구현하는 함수들이었다.
+* 개발자는 고계함수에 매개변수로 주어지는 함수를 이용하여 저수준의 작업을 커스터마이즈할 수 있다.
+* 예제 2-2 '회사 프로세스'에 대한 의사코드를 사용한 개념화
 ```
 listOfEmps
     -> filter(x.length > 1)
@@ -59,21 +71,22 @@ val result = employees
 	.map(_.capitalize) 
 	.reduce(_ + "," + _)
 ```
+* 스칼라에서는 이름을 생략하고 언더바(`_)를 대신 사용한다. reduce()의 경우에는 시그니처에 따라 매개변수를 두 개 전달했지만 일반 지시자인 언더바를 사용했다.
 
 ---
 ### 2.1.2 함수형 처리 - cont.
 * 예제 2-4 회사 프로세스의 자바 8 버젼
 ```
 public String cleanNames(List<String> names) { 
-if (names == null) return "";
-return names
-                .stream()
-                .filter(name -> name.length() > 1)
-                .map(name -> capitalize(name))
-                .collect(Collectors.joining(","));
+    if (names == null) return "";
+    return names
+        .stream()
+        .filter(name -> name.length() > 1)
+        .map(name -> capitalize(name))
+        .collect(Collectors.joining(","));
 
 private String capitalize(String e) {
-	return e.substring(0, 1).toUpperCase() + e.substring(1, e.length());
+    return e.substring(0, 1).toUpperCase() + e.substring(1, e.length());
 }
 ```
 
@@ -87,6 +100,7 @@ public static String cleanUpNames(listOfNames) { listOfNames
         .join ','
 }
 ```
+* 그루비의 치환 방법은 하나의 매개변수를 표현하는 데 it이라는 키워드를 사용.
 
 ---
 ### 2.1.2 함수형 처리 - cont.
@@ -111,9 +125,10 @@ public static String cleanUpNames(listOfNames) { listOfNames
 	2. 런타임이 최적화를 잘할 수 있도록 해준다. (어떤 경우 작업 순서를 바꾸면 더 능률적이 된다)
 	3. 개발자가 엔진 세부사항에 깊이 파묻힐 경우 불가능한 해답을 가능하게 한다.
 
+
 ---
 ### 2.1.2 함수형 처리 - cont.
-* java의 명령형 코드를 병렬처리화 한다고 생각해보자 --;;
+* 예제 2-1과 같은 java의 명령형 코드를 병렬처리화 한다고 생각해보자 --;;
 * 예제 2-8 스칼라에서의 병렬처리
 	* 스트림에 par만 붙이면 된다.
 ```
@@ -130,19 +145,20 @@ val parallelResult = employees
 	* parallelStream만 추가
 ```
 public String cleanNamesP(List<String> names) { if (names == null) return "";
-return names
-                .parallelStream()
-                .filter(n -> n.length() > 1)
-                .map(e -> capitalize(e))
-                .collect(Collectors.joining(","));
+    return names
+        .parallelStream()
+        .filter(n -> n.length() > 1)
+        .map(e -> capitalize(e))
+        .collect(Collectors.joining(","));
 }
 ```
 
 ---
 ### 2.1.2 함수형 처리 - cont.
+* 높은 추상 수준에서 코딩 작업을 하고, 저수준의 세부적인 최적화는 런타임이 담당하게 하면 된다.
 * JVM 엔지니어들이 가비지 컬렉션을 거의 신경 쓸 필요가 없을 정도로 추상화해준 덕분에 개발자들의 삶의 질은 향상되었다.
 * map, reduce, filter 같은 함수형 연산도 이와 같은 이중적인 혜택을 준다. 훌륭한 일례가 클로저용 리듀서 라이브러리이다.
-
+* 반복, 변형, 리덕션 같은 저수준 작업의 세부사항에 대해 생각하지 말고, 유사한 형태의 문제들이 얼마나 많은지부터 인식해보라.
 
 ---
 ## 2.2 사례 연구: 자연수의 분류
@@ -160,6 +176,13 @@ return names
 	* (1) 대상이 되는 수를 보유한 내부 상태
 	* (2) 합을 반복해서 계산하는 것을 피하기 위한 내부 캐시
 	* (3) aliquotSum(자신을 제외한 모든 약수의 합) 계산
+* 두 개의 내부 상태가 존재
+	1. _number : 대상이 되는 수
+	2. _cache : 진약수의 합을 유지
+* OOP 언어는 캡슐화를 이점으로 사용하기 때문에 객체지향적인 세계에서는 내부 상태의 사용이 보편적이면 권장된다. 상태를 분리해놓으면 값을 삽입할 수가 있기 때문에 단위 테스팅 같은 엔지니어링이 쉬워진다.
+* 많은 수의 작은 메서드로 세밀하게 분리되어 있다. 이것은 테스트 주도개발의 부수효과이다. 그 결과로 알고리즘의 각 부분을 살펴보기가 쉽다.
+
+
 
 ---
 ### 2.2.2 조금 더 함수적인 자연수 분류기
@@ -170,7 +193,11 @@ return names
 	* (3) 일반적이고 합리적인 변수의 사용으로 함수 수준에서의 재사용이 쉬워졌다.
 	* (4) 이 코드는 캐시가 없기 때문에 반복적으로 사용하기에 비능률적이다.
 
+* 모든 메서드가 public static 스코프를 가지며 자급적인 순수함수(부수효과가 없는 함수)이다. 이 객체에는 내부 상태가 없기 때문에 메서드를 숨길 이유가 없다. 사실 factors 메서드는 소수를 찾는 것과 같은 다른 애플리케이션에서도 유용하다.
+* 개발자들은 소형 패키지가 재사용이 용이하다는 것을 잘 잊는다. aliquotSum의 경우 특정 목록 대신 Collection<Integer>를 받으므로 함수 수준에서 일반적으로 재사용이 가능하다.
 * 이 해법에는 sum의 캐시를 구현하지 않았다. 4장에서 볼 버젼에는 메모이제이션을 통해 이런 상태성을 보존하면서 캐시를 회복하지만, 당분간은 캐시는 없애기로 하자.
+
+
 
 ---
 ### 2.2.3 자바 8을 사용한 자연수 분류기
@@ -190,7 +217,7 @@ return names
 	* factorsOf() : 자연수 1부터 대상의 수까지 f() 메서드의 코드를 사용해서 목록을 필터한다.
 
 ---
-## 2.3 공동된 빌딩블록
+## 2.3 공통된 빌딩블록
 
 ---
 ### 2.3.1 필터
@@ -205,7 +232,7 @@ public static IntStream factorsOf(int number) {
 ```
 ---
 ### 2.3.1 필터 - cont.
-* 람다 블록이 있는 언어에서는 더 간결하게 표현할 수 있다.
+* 람다 블록을 사용하지 않고도 같은 결과를 얻을 수는 있지만([예제 2-13](https://github.com/happy4u/functional_thinking/blob/master/chapter2/2.2.4_ex_2-13.java)) 람다 블록이 있는 언어에서는 더 간결하게 표현할 수 있다.
 * 예제 2-15 그루비에서의 필터 작업(그루비에서는 필터를 findAll()이라고 부른다)
 ```
 static def factors(number) {
@@ -217,7 +244,7 @@ static def factors(number) {
 ### 2.3.2 맵
 * 맵 연산은 컬렉션의 각 요소에 같은 함수를 적용하여 새로운 컬렉션으로 만든다.
 * map()이나 그와 관련된 변형 연산들을 살펴보기 위해서 자연수 분류기의 최적화된 버젼을 만들었다.
-* [예제 2-16 최적화된 자연수 분류기](https://github.com/happy4u/functional_thinking/blob/master/chapter2/2.3.2_ex_2-16.java)
+* 명령형 버전 - [예제 2-16 최적화된 자연수 분류기](https://github.com/happy4u/functional_thinking/blob/master/chapter2/2.3.2_ex_2-16.java)
 	* [예제 2-10 자바를 사용한 자연수 분류기](https://github.com/happy4u/functional_thinking/blob/master/chapter2/2.2.1_ex_2-10.java)와 비교하면 getFactors()가 최적화 됨.
 	1. 여기저기에 number를 매개변수로 입력하는 것을 방지하기 위한 내부 상태
 	2. sum을 더 효율적으로 조회하기 위한 캐시
@@ -234,6 +261,8 @@ static def factors(number) {
         (factors + factors.collect {number / it}).unique()
 }
 ```
+* 마지막 unique() 호출은 목록에서 중복된 요소를 제거하여 4와 같은 완전제곱근이 목록에 두 번 포함되는 것을 방지
+
 
 ---
 ### 2.3.2 맵 - cont.
@@ -250,7 +279,9 @@ static def factors(number) {
 * 셋째로 자주 사용하는 함수는 많이 사용하는 언어들 사이에서도 이름이 다양하고 약간씩 의미도 다르다. foldleft나 reduce는 캐터모피즘(카테고리 이론의 개념으로 목록을 접어서 다른 형태로 만드는 연산을 총칭한다.)이라는 목록 조작 개념의 특별한 변형이다.
 
 폴드 연산(fold operation)
-![폴드 연산(fold operation)](https://raw.githubusercontent.com/happy4u/functional_thinking/master/chapter2/fold_operation.gif)
+![폴드 연산(fold operation)](https://raw.githubusercontent.com/happy4u/functional_thinking/master/chapter2/pic_2-3_fold_operation.png)
+
+* reduce 함수는 주로 초기 값을 주어야 할 때 사용하고, flod는 누산기에 아무것도 없는 채로 시작한다.
 
 ---
 ### 2.3.3 폴드/리듀스 - cont.
