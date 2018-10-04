@@ -187,6 +187,7 @@ print length([2+1, 3*2, 1/0, 5-4])
 * 게으름을 만들려면 자료구조부터 그 개념을 지원해야 한다.
 * [예제 4-11 자바로 소수 찾기](https://github.com/happy4u/functional_thinking/blob/master/chapter4/4.2_ex_4-11.java)
 * 자바는 게으른 컬렉션을 네이티브로 지원하지 않지만, Iterator를 사용하면 흉내를 낼 수는 있다.
+	* hasNext() : 소수가 무한이 많기 때문에 가능.
 * 예를 들어 [예제 4-11]의 도우미를 사용하여, 부를 때마다 다음 소수를 리턴하는 반복자를 [예제 4-12]에서 만들어 봤다.
 * [예제 4-12 자바를 사용한 소수 반복자](https://github.com/happy4u/functional_thinking/blob/master/chapter4/4.2_ex_4-12.java)
 	* 일반적으로 개발자들은 반복자(iterators)가 컬렉션을 백업 저장소로서 사용한다고 생각하지만, Iterator 인터페이스를 지원하는 것은 어떤 것이든 가능하다.
@@ -195,7 +196,8 @@ print length([2+1, 3*2, 1/0, 5-4])
 ---
 ### 4.2.2 토털리 레이지 자연수 분류기 (Totally Lazy Number Classifier)
 * [2장에서 다룬 자연수 분류기](https://github.com/happy4u/functional_thinking/tree/master/chapter2#221-명령형-자연수-분류) 참고
-* [토털리 레이지](https://github.com/bodar/totallylazy)는 장황하게나마 자바 구문을 함수형 메커니즘 쪽으로 바꿔주는 자바 프레임워크이다.
+* [토털리 레이지](https://totallylazy.com/)는 장황하게나마 자바 구문을 함수형 메커니즘 쪽으로 바꿔주는 자바 프레임워크이다.
+	* 간결하고 함수형인 자바 코드를 짜려면 자바 8로 업그레이드해야만 가능하다고 생각할지도 모르겠다. 이전 버젼의 자바에 고계함수를 끼워 맞추기는 불가능하지만, 몇몇 프로임워크들은 제네릭, 익명 클래스, 정적 임포트를 교묘하게 사용하여 앞에 살펴본 혜택을 누려왔다.
 * [예제 4-13 토털리 레이지 자바 프레임워크를 사용한 자연수 분류기](https://github.com/happy4u/functional_thinking/blob/master/chapter4/4.2_ex_4-13.java)
 	(1) 프레임워크가 remainder 같은 함수와 where 같은 술어를 제공한다.
 	* 토털리 레이지는 연산자 오버로딩 없는 자바의 구문적 제약 조건 아래 자바를 더 좋게 만들어야 하기 때문에 적당한 메서드들을 첨가해야 한다. 따라서 num % i = 0이 where(remainder(n), is(zero))로 바뀐다.
@@ -211,6 +213,7 @@ print length([2+1, 3*2, 1/0, 5-4])
 		* 두 매개변수는 목록의 초기 값과 다음 값을 생성하는 코드 블록이다.
 	* integers() : 맨 앞에 값이 하나만 주어지고 나머지 수를 생성하는 방식으로, 게으른 수의 목록을 만들어내는 공장처럼 작동한다.
 	* 이 목록에서 값을 꺼내려면 요구한 개수의 값을 리턴하는 getHead() 메서드를 사용해야 한다.
+* [LazyList 구현](https://github.com/happy4u/functional_thinking/blob/master/chapter4/4.2_ex_4-15.groovy)
 
 ---
 ### 4.2.4 게으른 목록 만들기
