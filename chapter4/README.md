@@ -217,7 +217,7 @@ print length([2+1, 3*2, 1/0, 5-4])
 
 ---
 ### 4.2.4 게으른 목록 만들기
-* 그루비는 근본적으로는 엄격한 언어이지만 클로저 내부에 엄격한 목록을 재귀적으로 포함해서 게으르지 ㅇ낳은 목록을 게으른 목록으로 변형할 수 있다.
+* 그루비는 근본적으로는 엄격한 언어이지만 클로저 내부에 엄격한 목록을 재귀적으로 포함해서 게으르지 않은 목록을 게으른 목록으로 변형할 수 있다.
 * 그루비에서 속이 비어 있는 엄격한 목록은 빈 대괄호([])를 써서 배열로 표현된다. 이것을 클로저에 감싸면 속이 빈 게으른 목록이 된다.
   ```
   { -> [ ] }
@@ -233,7 +233,7 @@ print length([2+1, 3*2, 1/0, 5-4])
   ```
  
 ---
-### 4.2.4 그루비의 게으른 목록 - cont.
+### 4.2.4 그루비의 게으른 목록 - cont.(SKIP)
 * [예제 4-18 그루비에서 게으른 목록 만들기](https://github.com/happy4u/functional_thinking/blob/master/chapter4/4.2_ex_4-18.groovy) 
 	* (1) 생성자는 비공개이며, nil()로 속이 빈 목록을 생성
     * (2) cons() 메서드를 사용하면 주어진 매개변수를 새 요소로 앞에 덧붙이고 그 결과를 클로저 블록으로 감쌀 수 있게 된다.
@@ -268,17 +268,17 @@ print length([2+1, 3*2, 1/0, 5-4])
 	1. 무한 수열을 만들 수 있다.
 	2. 저장 시 크기가 줄어든다. 컬렉션 전부를 유지하지 않고 순차적으로 다음 값을 유도할 수 있으니 저장소와 실행 속도를 맞바꿀 수 있다.
 	3. 런타임이 좀 더 효율적인 코드를 만들 수 있다.
-* [예제 4-20 그루비를 사용한 회문 찾기](https://github.com/happy4u/functional_thinking/blob/master/chapter4/4.2_ex_4-20.groovy) 
+* [예제 4-20 그루비를 사용한 회문(거꾸로 읽어도 뜻이 같은 문장이나 단어) 찾기](https://github.com/happy4u/functional_thinking/blob/master/chapter4/4.2_ex_4-20.groovy) 
 	* isPalindorome() : 주어진 단어를 소문자로 정규화하고, 그 단어의 글자들을 역순으로 나열해도 원래 단어와 똑같은지를 확인
 	* findFirstPalindrome() : find() 메서드를 사용해 첫번째 회문 단어를 찾으려 시도
-	* 아주 긴 문자열에서 첫 번째 회문을 찾아야 할 경우를 가정해 보면, tokenize() 메서드는 게으르지 않이 때문에 이 경우에는 금방 버려질 **엄청나게 큰 임시 자료구조**가 만들어질 수도 있다.
+	* 아주 긴 문자열에서 첫 번째 회문을 찾아야 할 경우를 가정해 보면, 그루비의 tokenize() 메서드는 게으르지 않이 때문에 이 경우에는 금방 버려질 **엄청나게 큰 임시 자료구조**가 만들어질 수도 있다.
 
 ---
 ### 4.2.5 게으름의 이점 - cont. (클로저)
 * 예제 4-20과 예제 4-21은 같은 내용을 다른 언어 구조를 사용하여 구현한 것.
 * [예제 4-21 클로저를 사용한 회문 찾기](https://github.com/happy4u/functional_thinking/blob/master/chapter4/4.2_ex_4-21.clj)
 	* (palindrome? ) : 주어진 문자열을 소문자로 바꾸고 역순으로 된 문자열과 동일한지 확인
-		* apply : 앞뒤가 뒤바뀐 문자의 수열을 비교를 돕기 위해 문자열로 바꿔준다.
+		* apply 함수 : 앞뒤가 뒤바뀐 문자의 수열을 비교를 돕기 위해 문자열로 바꿔준다.
 	* (find-palindromes ) : 필터로 사용할 함수와 필터의 대상이 될 컬렉션을 매개변수로 받는 클로저의 (filter )함수를 사용
 	* 그루비에서 클로저로 바뀌는 과정은 단순한 구문 변화 이상을 의미한다.
 	* 클로저 버젼에서는 모든 것이 자동적으로 게으르게 만들어진다.
@@ -308,7 +308,7 @@ print length([2+1, 3*2, 1/0, 5-4])
   ```
   lazy val x = timeConsumingAndOrSizableComputation()
   ```
-  * This is basically syntactic sugar for the code:
+  * 위 코드를 풀어보면 아래와 같다.
   ```
   var _x = None
   def x = if (_x.isDefined) _x.get else {
@@ -336,3 +336,4 @@ print length([2+1, 3*2, 1/0, 5-4])
       @Lazy(soft = true) List pets = ['Cat', 'Dog', 'Bird']
   }
   ```
+  * [Java Reference와 GC 참고](https://d2.naver.com/helloworld/329631): softly reachable 객체는 weakly reachable 객체와는 달리 GC가 동작할 때마다 회수되지 않으며 자주 사용될수록 더 오래 살아남게 된다
