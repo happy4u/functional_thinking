@@ -28,8 +28,16 @@
 	* process() 메서드는 checkCredit(), checkInventory(), ship()에 의존한다.
 
 * [예제 6-2 일급 함수를 사용한 템플릿 메서드](https://github.com/happy4u/functional_thinking/blob/master/chapter6/6.2_ex_6-2.groovy)
-	* [예제 6-2]에서 알고리즘의 각 단계는 클래스에 할당할 수 있는 성질에 불과하다. 이것이 상세한 구현 방법을 언어의 기능으로 감추는 일례다.(danny's - 개인적으로 잘 이해는 안감)
+	* [예제 6-2]에서 알고리즘의 각 단계는 클래스에 할당할 수 있는 성질에 불과하다. 이것이 상세한 구현 방법을 언어의 기능으로 감추는 일례다.
+	* 두 해법은 동등하지 않다. 6-1의 템플릿 메서드는 하위 클래스가 추상 클래스에서 정해준 메서드를 구현해야 한다. 하지만 좀 더 유동성이 요구되는 상황에서는 이렇게 고정화된 메서드 선언이 적합하지 않을 수도 있다.
+```groovy
+def process(){
+	checkCredit?.call()
+    ...
+}
 
+```
+* 그루비에는 객체가 널인지 확인한 후에 메서드를 실행하는 ?.가 있다.
 
 ---
 ### 6.2.2 전략
@@ -45,13 +53,13 @@
 
 ---
 ### 6.2.3 플라이웨이트 디자인 패턴과 메모이제이션
-* [플라이웨이트 패턴](http://goo.gl/sFtKok)은 많은 수의 조밀한 객체의 참조들을 공유하는 최적화 기법
+* [플라이웨이트 패턴](http://bit.ly/2J5dmXZ)은 많은 수의 조밀한 객체의 참조들을 공유하는 최적화 기법
 * [예제 6-7 컴퓨터 종류를 모델링한 간단한 클래스](https://github.com/happy4u/functional_thinking/blob/master/chapter6/6.2_ex_6-7.groovy)
 	* AssignedComputer는 컴퓨터와 사용자를 연계해준다.
 	* 이 코드를 효율적으로 만드는 보편적인 방법은 팩토리 패턴과 플라이웨이트 패턴을 같이 사용하는 것이다.
 * [예제 6-8 컴퓨터의 플라이웨이트 인스턴스를 만드는 싱글턴 클래스](https://github.com/happy4u/functional_thinking/blob/master/chapter6/6.2_ex_6-8.groovy)
 	* ComputerFactory 클래스는 가능한 모든 종류의 컴퓨터의 캐시를 만들고, 적당한 인스턴스를 ofType() 메서드를 통해서 전달. 자바에서 흔히 볼 수 있는 전형적인 싱글턴 팩토리이다.
-* 싱글턴의 사용은 패턴을 런타임에 양도하는 또 하나의 좋은 예를 보여준다. [예제 6-9]에서는 그루비가 지원하는 @Singleton 애너테이션을 사용하여 ComputerFactory를 더 단순화 해 보자
+* 싱글턴의 사용은 패턴을 런타임에 양도하는 또 하나의 좋은 예를 보여준다. [예제 6-9]에서는 그루비가 지원하는 @Singleton 어노테이션을 사용하여 ComputerFactory를 더 단순화 해 보자
 
 
 ---
@@ -100,6 +108,8 @@
 
 ---
 ## 6.3 구조형 재사용과 함수형 재사용 (Structural Versus Functional Reuse)
+* 객체지향 코드를 재사용하려면, 대상이 되는 코드를 다른 클래스로 옮기고 상속을 통해 접근.
+### 6.3.1 구조물을 사용한 코드 재사용
 * [예제 6-15 명령형 자연수 분류기](https://github.com/happy4u/functional_thinking/blob/master/chapter6/6.3_ex_6-15.java)
 * [예제 6-16 명령형으로 소수 찾기](https://github.com/happy4u/functional_thinking/blob/master/chapter6/6.3_ex_6-16.java)
 * 위 두 가지 예제의 중복 코드를 제거해보자
@@ -114,7 +124,8 @@
 * [예제 6-19 리팩토링으로 간단해진 소수 찾기](https://github.com/happy4u/functional_thinking/blob/master/chapter6/6.3_ex_6-19.java)
 * 리팩토링 시 number 변수의 접근 방식을 어떻게 정하든 이 문제에서는 커플링된 여러 개의 클래스를 다뤄야 한다. 이것은 문제의 부분들을 분리해주기 때문에 종종 이롭기도 하지만, 상위 클래스를 바꾸면 하위 클래스에도 영향을 주는 문제점이 있다.
 * 이것이 **커플링**을 통한 코드 재사용의 일례이다.
-
+* 상속을 사용하는 것이 좋지 않다고 주장하는 것이 아니라 이 방식이 객체지향 언어에서 더 나은 성질을 가진 다른 추상 개념 대신에 남용되고 있다는 뜻이다.
+* 
 ---
 ## 6.3 구조형 재사용과 함수형 재사용 (Structural Versus Functional Reuse) - cont.
 #### 구성(composition)을 사용한 코드 재사용
@@ -128,14 +139,15 @@
 
 ---
 ## 6.3 구조형 재사용과 함수형 재사용 (Structural Versus Functional Reuse) - cont.
-* [예제 6-21 함수형 소수 찾기](https://github.com/happy4u/functional_thinking/blob/master/chapter6/6.3_ex_6-21.java)
+* [예제 6-21 함수형 소수 찾기](https://github.com/happy4u/functional_thinking/blob/master/chapter6/6.3_ex_6-21.java)  : 나머지 코드는 6-20과 동일
 * [예제 6-22 함수형으로 리팩토링한 Factors 클래스](https://github.com/happy4u/functional_thinking/blob/master/chapter6/6.3_ex_6-22.java)
+	* 명령형 버젼에서 했던 것처럼 중복된 코드를 Factors 클래스로 추출한 버젼 
 	* factors() 메서드는 가독성을 위해 of()로 rename
 	* 함수형 버전의 모든 상태는 매개변수로 주어지기 때문에, 이 추출한 클래스에는 공유된 상태가 없다.
 * [예제 6-23 리팩토링한 자연수 분류기](https://github.com/happy4u/functional_thinking/blob/master/chapter6/6.3_ex_6-23.java)
 * [예제 6-22], [예제 6-23] 모두 Factors 클래스를 사용하지만, 그 사용은 전적으로 개별 메서드에 포함된다.
 * 상속을 통한 커플링과 구성의 차이점은 작지만 중요하다.
-* 이 예와 같은 간단한 경우에는 코드 구조물의 골격이 그대로 드러나는 것을 볼 수 있다. 하지만 복잡한 코드베이스를 리팩토링할 때는 객체지향 언어의 코드 재사용 방식인 이런 커필링이 여기저기 나타난다. 무성하게 커플링된 구조물들을 이해해야 하는 어려움 때문에 객체지향 언어에서는 코드 재사용이 피해를 많이 입었다.
+* 이 예와 같은 간단한 경우에는 코드 구조물의 골격이 그대로 드러나는 것을 볼 수 있다. 하지만 복잡한 코드베이스를 리팩토링할 때는 객체지향 언어의 코드 재사용 방식인 이런 커플링이 여기저기 나타난다. 무성하게 커플링된 구조물들을 이해해야 하는 어려움 때문에 객체지향 언어에서는 코드 재사용이 피해를 많이 입었다.
 
 ---
 ## 6.3 구조형 재사용과 함수형 재사용 (Structural Versus Functional Reuse) - cont.
