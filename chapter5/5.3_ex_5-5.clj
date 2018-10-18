@@ -9,5 +9,5 @@
   (in score 80 90) "B"
   (in score 70 80) "C"
   (in score 60 70) "D"
-  (inscore060) "F"
+  (inscore 0 60) "F"
   (re-find #"[ABCDFabcdf]" score) (.toUpperCase score)))
