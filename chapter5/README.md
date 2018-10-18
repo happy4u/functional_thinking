@@ -41,7 +41,7 @@
 ## 5.2 문제를 향하여 언어를 구부리기
 * 대부분의 개발자들은 복잡한 비지니스 문제를 자바와 같은 언어로 번역하는 것이 그들의 할 일 이라는 착각 속에서 일을 한다. 자바가 언어로서 유연하지 못하기 때문에, 아이디어를 기존의 고정된 구조에 맞게 주물러야 하기 때문이다.
 * 유연한 언어는 문제를 언어에 맞게 구부리는 대신 언어를 문제에 어울리게 구부릴 수 있다.
-* 루비와 같은 언어는 도메인 특화 언어(DSL)를 주류 언어들보다 잘 지원하기 때문에 이런 것이 가능하다
+* 루비와 같은 언어는 도메인 특화 언어([DSL](http://www.mimul.com/pebble/default/2013/06/21/1371806174467.html))를 주류 언어들보다 잘 지원하기 때문에 이런 것이 가능하다
 * 현대 함수형 언어들은 좀 더 진화했다. 스칼라는 내부 DSL을 지원하기 위해서 설계된 언어이고, 클로저와 같은 모든 리스프 계열 언어들은 개발자가 문제에 맞게 언어를 바꾸는 유연성 면에서 어떤 언어 못지않다.
 
 ---
@@ -68,6 +68,7 @@
 
 ---
 ### 5.3.2 클로저 언어 구부리기
+
 * 클로저 같은 리스프 계열의 언어에서는 개발자가 언어를 문제에 맞게 변형할 수 있다.
 * 클로저를 사용하는 개발자는 가독성이 좋은 코드를 만드는 셈이다.
 * [예제 5-5 클로저로 만든 학점 프로그램](https://github.com/happy4u/functional_thinking/blob/master/chapter5/5.3_ex_5-5.clj)
@@ -96,11 +97,12 @@
 
 ---
 ### 5.3.3 클로저의 멀티메서드와 맞춤식 다향성 - cont.
+* 자바의 다형성이 인자의 타입에 따라 다르게 동작 한다면 클로저의 멀티메서드는 인자의 타입 뿐만 아니라 인자의 값에 따라 다르게 동작하도록 만들 수 있다.
 * [예제 5-8 멀티메서드 정의하기](https://github.com/happy4u/functional_thinking/blob/master/chapter5/5.3_ex_5-8.clj)
 	* basic-colors-in이란 디스패치 함수 : 정해진 모든 색깔들을 벡터 형태로 리턴
 	* 모든 다른 경우를 처리하는 :default 키워드를 포함
 
-* [예제 5-8 멀티메서드 정의하기](https://github.com/happy4u/functional_thinking/blob/master/chapter5/5.3_ex_5-9.clj)
+* [예제 5-9 클로저로 색 구조 프로그램 테스트하기](https://github.com/happy4u/functional_thinking/blob/master/chapter5/5.3_ex_5-9.clj)
 	* 색깔을 하나만 주고 이 메서드를 호출하면 멀티메서드의 단일 색깔 버젼이 실행
 	* 여러 색깔로 이 메서드를 호출하면 디폴트 메서드가 모든 색을 리턴
 * 다형성을 상속과 분리하면 강력하고 상황에 맞는 디스패치 방식이 가능해진다.
@@ -138,7 +140,7 @@
 * 자바에서는 언어 자체의 예외 생성 및 전파 기능을 사용하는 전통적인 방법으로 오류를 처리한다.
 * 예외는 많은 함수형 언어가 준수하는 전제 몇 가지를 깨트린다.
 	1. 함수형 언어는 부수효과가 없는 순수함수를 선호한다. 그런데 예외를 발생시키는 것은 예외적인 프로그램 흐름을 야기하는 부수효과다.
-	2. 참조 투명성. 호출하는 입장에서는 단순한 값 하나를 사용하단, 하나의 값을 리턴하는 함수를 사용하든 다를 바가 없어야 한다. 만약 호출된 함수에서 예외가 발생할 수 있다면, 호출하는 입장에서는 안전하게 값을 함수로 대체할 수  없을 것이다.
+	2. 참조 투명성. 호출하는 입장에서는 단순한 값 하나를 사용하든, 하나의 값을 리턴하는 함수를 사용하든 다를 바가 없어야 한다. 만약 호출된 함수에서 예외가 발생할 수 있다면, 호출하는 입장에서는 안전하게 값을 함수로 대체할 수  없을 것이다.
 
 ---
 ### 5.5.1 함수형 오류 처리
@@ -172,10 +174,11 @@
 * [예제 5-16 스칼라의 Either 클래스](https://github.com/happy4u/functional_thinking/blob/master/chapter5/5.5_ex_5-16.scala)
 	* [예제 5-16]에서처럼, Either는 오류 처리에서 주로 사용된다.
 
+* 자주 사용하는 경우 중의 하나는 5-17에서처럼, Either의 인스턴스에 패턴 매칭을 적용하는 것이다.
 * [예제 5-17 스칼라의 Either와 패턴 매칭](https://github.com/happy4u/functional_thinking/blob/master/chapter5/5.5_ex_5-17.scala)
 
 ---
-### 5.5.2 Either 클래스 - cont.
+### 5.5.2 Either 클래스 - cont. (SKIP)
 * 자바에 내장되지는 않았지만, 제네릭을 사용하면 [예제 5-18]에서 보듯이 간단한 대용품 Either 클래스를 만들 수 있다.
 ```
 // 다음과 같은 식으로 F 인터페이스를 정의해야 예제 5-18을 사용할 수 있다.
@@ -190,7 +193,7 @@ public interface F<A>{
 	* 함수형의 보편적인 관례에 따라 Either 클래스의 왼쪽이 예외, 오른쪽이 결과 값이다.
 
 ---
-### 5.5.2 Either 클래스 - cont.
+### 5.5.2 Either 클래스 - cont. (SKIP)
 #### 로마숫자 파싱
 * [예제 5-19]는 Either의 사용법을 설명하기 위해서 만든 RomanNumeral이란 클래스다.
 * [예제 5-19 자바로 단순하게 구현한 로마숫자](https://github.com/happy4u/functional_thinking/blob/master/chapter5/5.5_ex_5-19.java)
@@ -208,7 +211,7 @@ public interface F<A>{
 * 이런 우회 덕분에 게으름을 구현하는 것이 가능해진다.
 
 ---
-### 5.5.2 Either 클래스 - cont.
+### 5.5.2 Either 클래스 - cont. (SKIP)
 #### 게으른 파싱과 함수형 자바
 * Either 클래스는 함수형 알고리즘에 자주 사용된다.
 * [예제 5-22 함수형 자바를 사용하여 게으른 파서 생성하기](https://github.com/happy4u/functional_thinking/blob/master/chapter5/5.5_ex_5-22.java)
@@ -220,7 +223,7 @@ public interface F<A>{
 * 이런 게으른 예외는 생성자의 실행을 지연하게 해준다.
 
 ---
-### 5.5.2 Either 클래스 - cont.
+### 5.5.2 Either 클래스 - cont. (SKIP)
 #### 디폴트 값을 제공하기
 * Either를 예외 처리에 사용하여 얻는 이점은 게으름만이 아니다. 디폴트 값을 제공한다는 것이 따른 점이다.
 * [예제 5-24 적당한 디폴트 리턴 값 제공하기](https://github.com/happy4u/functional_thinking/blob/master/chapter5/5.5_ex_5-24.java)
@@ -228,7 +231,7 @@ public interface F<A>{
 	* MAX보다 큰 로마숫자의 경우 디폴트로 MAX값을 가지게 했다.
 
 ---
-### 5.5.2 Either 클래스 - cont.
+### 5.5.2 Either 클래스 - cont. (SKIP)
 #### 예외 조건을 래핑하기
 * [예제 5-26 다른 곳에서 던진 예외를 처리하기](https://github.com/happy4u/functional_thinking/blob/master/chapter5/5.5_ex_5-26.java)
 * [예제 5-27 예외 래핑 테스트](https://github.com/happy4u/functional_thinking/blob/master/chapter5/5.5_ex_5-27.java)
@@ -236,7 +239,7 @@ public interface F<A>{
 	* Either를 사용하면 점검지정 예외(checked exception)를 포함한 모든 예외들을 함수형으로 바꿀 수 있다.
 
 ---
-### 5.5.2 Either 클래스 - cont.
+### 5.5.2 Either 클래스 - cont. (SKIP)
 #### 예외 조건을 래핑하기
 * [예제 5-28 게으른 예외 처리](https://github.com/happy4u/functional_thinking/blob/master/chapter5/5.5_ex_5-28.java)
 * [예제 5-29 던저진 예외를 처리하는 예제](https://github.com/happy4u/functional_thinking/blob/master/chapter5/5.5_ex_5-29.java)
@@ -245,7 +248,8 @@ public interface F<A>{
 * 클로저나 그루비는 리턴 값을 쉽게 생성할 수 있는 동적 타이핑 언어이기 때문에 Either같은 것을 굳이 기본적으로 포함하지 않아도 된다.
 
 ---
-### 5.5.3 옵션 클래스
+### 5.5.3 옵션 클래스 
+* 함수형 자바의 Option으로 Java8의 Optional을 생각하면 됨. (SKIP)
 * Either는 두 부분을 가진 값을 간편하게 리턴할 수 있는 개념이다.
 * 여러 언어나 프레임워크에는 함수에서 리턴할 때 사용할 수 있는 Either와 유사한 Option이란 클래스가 있다.
 	* 적당한 값이 존재하지 않을 경우를 의미하는 none, 성공적인 리턴을 의미하는 some을 사용하여 예외 조건을 더 쉽게 표현한다.
@@ -259,7 +263,7 @@ public interface F<A>{
   ```
 
 ---
-### 5.5.3 옵션 클래스 - cont.
+### 5.5.3 옵션 클래스 - cont. (SKIP)
 * 예제 5-31 Option 기능 테스트하기
   ```
   @Test
@@ -295,12 +299,11 @@ public interface F<A>{
 * [예제 5-34 스칼라에서 케이스 클래스 매칭하기](https://github.com/happy4u/functional_thinking/blob/master/chapter5/5.5_ex_5-34.scala)
 	* 먼저 기본 Color 클래스를 만들고, 단색 버젼들을 케이스 클래스로 만들었다.
 	* 어떤 색이 함수에 넘겨졌는지를 알기 위해 match를 사용하여 가능한 모든 값에 대해 패턴 매칭을 시도한다.
-
+* 
 * 자바는 패턴 매칭을 지원하지 않는다. 그래서 스칼라처럼 깔끔하고 읽기 쉬운 디스패치 코드를 만들 수 없다.
-* 하지만 제네릭과 잘 알려진 자료구조를 같이 사용하면 어느 정도 가까이 갈 수 있다.
 
 ---
-### 5.5.4 Either 트리와 패턴 매칭 - cont.
+### 5.5.4 Either 트리와 패턴 매칭 - cont. (SKIP)
 #### Either 트리
 * Either의 추상 개념은 원하는 개수만큼 슬롯을 확장할 수 있다.
   ```
@@ -314,7 +317,7 @@ public interface F<A>{
 	* 이 트리 구조는 내부적으로 \<Either, \<Leaf, Node>>를 바탕으로 하므로 패턴 매칭을 흉내내서 모든 요소를 순회할 수 있다.
 
 ---
-### 5.5.4 Either 트리와 패턴 매칭 - cont.
+### 5.5.4 Either 트리와 패턴 매칭 - cont. (SKIP)
 #### 패턴 매칭으로 트리 순회하기
 * 함수형 자바에서 구현된 Either의 left()와 right() 메서드는 모두 Iterable 인터페이스를 구현
 * 덕분에 트리의 깊이를 패턴 매칭 방식으로 알아내는 코드를 짤 수 있다.
@@ -324,7 +327,7 @@ public interface F<A>{
 	* 셀이 node이면, 1을 레벨 값에 더하고 재귀적으로 왼쪽과 오른쪽을 모두 검색
 
 ---
-### 5.5.4 Either 트리와 패턴 매칭 - cont.
+### 5.5.4 Either 트리와 패턴 매칭 - cont. (SKIP)
 #### 패턴 매칭으로 트리 순회하기
 * [예제 5-37 트리에서 값의 존재 확인하기](https://github.com/happy4u/functional_thinking/blob/master/chapter5/5.5_ex_5-37.java)
 	* 빈 셀에 도달하면 검색이 실패했으므로 false 리턴
@@ -334,7 +337,7 @@ public interface F<A>{
 	* inTree() 메서드는 leaf 중 하나가 같은 값을 가지면 true를 리턴하고, 이 true 값은 | 연산자 때문에 재귀적인 호출 스택을 따라 위로 전달된다.
 
 ---
-### 5.5.4 Either 트리와 패턴 매칭 - cont.
+### 5.5.4 Either 트리와 패턴 매칭 - cont. (SKIP)
 #### 패턴 매칭으로 트리 순회하기
 * [예제 5-39 트리에서 발견 횟수 알아내기](https://github.com/happy4u/functional_thinking/blob/master/chapter5/5.5_ex_5-39.java)
 	* 트리 안에서 발견된 횟수를 세기 위해 같은 값을 가진 leaf마다 1을 리턴
